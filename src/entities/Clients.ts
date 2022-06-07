@@ -2,7 +2,7 @@ import { PrimaryGeneratedColumn, Column, Entity } from "typeorm";
 import { v4 as uuid4 } from "uuid";
 
 @Entity("clients")
-export default class Clients {
+export default class Client {
   @PrimaryGeneratedColumn("uuid")
   id?: string;
 
