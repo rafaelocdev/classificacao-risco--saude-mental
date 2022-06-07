@@ -16,7 +16,7 @@ services:
       - 3000:3000
     depends_on:
       - postgresDB
-    command: yarn dev
+    command: bash -c 'yarn migration:run && yarn dev'
 
   postgresDB:
     container_name: capstone_q4_pddatabase
