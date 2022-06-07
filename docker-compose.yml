@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  api:
+    container_name: capstone_q4_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    env_file: .env
+    volumes:
+      - ./:/app
+    expose:
+      - 3000
+    ports:
+      - 3000:3000
+    depends_on:
+      - postgresDB
+    command: yarn dev
+
+  postgresDB:
+    container_name: capstone_q4_pddatabase
+    image: postgres:14.3
+    restart: always
+    env_file: .env
+    expose:
+      - 5432
+    ports:
+      - 5433:5432
+    volumes:
+      - pgdatabase:/var/lib/postgresql/data
+
+volumes:
+  pgdatabase:
+    name: capstone_q4_pgvolume
