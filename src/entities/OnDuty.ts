@@ -1,5 +1,12 @@
-import { PrimaryGeneratedColumn, Column, Entity } from "typeorm";
+import {
+  PrimaryGeneratedColumn,
+  Column,
+  Entity,
+  OneToOne,
+  JoinColumn,
+} from "typeorm";
 import { v4 as uuid4 } from "uuid";
+import Employee from "./Employees";
 
 @Entity("on_duty")
 export default class OnDuty {
@@ -11,6 +18,10 @@ export default class OnDuty {
 
   @Column({ type: "boolean" })
   available: boolean;
+
+  @OneToOne(() => Employee)
+  @JoinColumn({ name: "user_id" })
+  user: Employee;
 
   constructor() {
     if (!this.id) {

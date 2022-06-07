@@ -1,5 +1,13 @@
-import { PrimaryGeneratedColumn, Column, Entity } from "typeorm";
+import {
+  PrimaryGeneratedColumn,
+  Column,
+  Entity,
+  OneToOne,
+  JoinColumn,
+} from "typeorm";
 import { v4 as uuid4 } from "uuid";
+import Client from "./Clients";
+import Employee from "./Employees";
 
 @Entity("data")
 export default class Data {
@@ -32,6 +40,14 @@ export default class Data {
 
   @Column({ type: "char", length: 2 })
   state: string;
+
+  @OneToOne(() => Client)
+  @JoinColumn({ name: "customer_id" })
+  customer: Client;
+
+  @OneToOne(() => Employee)
+  @JoinColumn({ name: "user_id" })
+  user: Employee;
 
   constructor() {
     if (!this.id) {
