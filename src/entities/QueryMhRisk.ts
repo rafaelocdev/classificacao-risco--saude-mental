@@ -11,22 +11,22 @@ export default class QueryMhRisk {
   @PrimaryGeneratedColumn("uuid")
   id?: string;
 
-  @Column({ type: "enum", enum: [1, 2, 3], nullable: false })
+  @Column({ type: "enum", enum: [1, 2, 3] })
   depression: number;
 
-  @Column({ type: "boolean", name: "self_aggression", nullable: false })
+  @Column({ type: "boolean", name: "self_aggression" })
   selfAggression: boolean;
 
-  @Column({ type: "boolean", nullable: false })
+  @Column({ type: "boolean" })
   insomnia: boolean;
 
-  @Column({ type: "boolean", nullable: false })
+  @Column({ type: "boolean" })
   drugs: boolean;
 
-  @Column({ type: "boolean", nullable: false })
+  @Column({ type: "boolean" })
   mourning: boolean;
 
-  @Column({ type: "boolean", name: "family_support", nullable: false })
+  @Column({ type: "boolean", name: "family_support" })
   familySupport: boolean;
 
   @CreateDateColumn({ name: "evaluation_date" })

@@ -6,10 +6,10 @@ export default class Clients {
   @PrimaryGeneratedColumn("uuid")
   id?: string;
 
-  @Column({ type: "varchar", length: 255, nullable: false })
+  @Column({ length: 255 })
   name: string;
 
-  @Column({ type: "int", nullable: false })
+  @Column({ type: "int" })
   subscription: number;
 
   constructor() {
