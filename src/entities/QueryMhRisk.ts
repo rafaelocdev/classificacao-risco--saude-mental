@@ -3,8 +3,11 @@ import {
   Column,
   Entity,
   CreateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from "typeorm";
 import { v4 as uuid4 } from "uuid";
+import Client from "./Clients";
 
 @Entity("query_mh_risk")
 export default class QueryMhRisk {
@@ -31,6 +34,10 @@ export default class QueryMhRisk {
 
   @CreateDateColumn({ name: "evaluation_date" })
   evaluationDate?: Date;
+
+  @ManyToOne(() => Client, (client) => client.queriesMhRisk)
+  @JoinColumn({ name: "client_id" })
+  client: Client;
 
   constructor() {
     if (!this.id) {

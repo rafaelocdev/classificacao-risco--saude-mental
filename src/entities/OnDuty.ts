@@ -4,8 +4,10 @@ import {
   Entity,
   OneToOne,
   JoinColumn,
+  OneToMany,
 } from "typeorm";
 import { v4 as uuid4 } from "uuid";
+import Appointment from "./Appointments";
 import Employee from "./Employees";
 
 @Entity("on_duty")
@@ -22,6 +24,9 @@ export default class OnDuty {
   @OneToOne(() => Employee)
   @JoinColumn({ name: "user_id" })
   user: Employee;
+
+  @OneToMany(() => Appointment, (appointments) => appointments.onDuty)
+  appointments: Appointment[];
 
   constructor() {
     if (!this.id) {
