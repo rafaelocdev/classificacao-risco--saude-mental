@@ -15,14 +15,14 @@ export default class Appointment {
   @PrimaryGeneratedColumn("uuid")
   id?: string;
 
-  @Column()
-  anamnesis: string;
+  @Column({ nullable: true })
+  anamnesis?: string;
 
-  @Column({ length: 255 })
-  action: string;
+  @Column({ length: 255, nullable: true })
+  action?: string;
 
-  @ManyToOne(() => OnDuty, (onDuty) => onDuty.appointments)
-  @JoinColumn({ name: "on_duty_id" })
+  @ManyToOne(() => OnDuty, (onDuty) => onDuty.appointments, { nullable: true })
+  @JoinColumn({ name: "on_duty_id", referencedColumnName: "employee" })
   onDuty: OnDuty;
 
   @OneToOne(() => QueryMhRisk)

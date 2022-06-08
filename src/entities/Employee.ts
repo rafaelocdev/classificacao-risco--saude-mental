@@ -3,10 +3,10 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
+  OneToOne,
 } from "typeorm";
 import { v4 as uuid4 } from "uuid";
-import Job from "./Jobs";
+import Data from "./Data";
 
 @Entity("employees")
 export default class Employee {
@@ -22,9 +22,22 @@ export default class Employee {
   @Column({ length: 50 })
   register: string;
 
-  @ManyToOne(() => Job, (job) => job.employees)
-  @JoinColumn({ name: "job_id" })
-  job: Job;
+  @Column({
+    type: "enum",
+    enum: ["Enfermeiro(a)", "Médico(a)", "Administrador(a)"],
+  })
+  job: string;
+
+  @Column({ type: "enum", enum: ["Psiquiatria"], nullable: true })
+  specialty: string;
+
+  // @ManyToOne(() => Job, (job) => job.employees)
+  // @JoinColumn({ name: "job_id" })
+  // job: Job;
+
+  @OneToOne(() => Data)
+  @JoinColumn({ name: "data_id" })
+  data: Data;
 
   constructor() {
     if (!this.id) {
