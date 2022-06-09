@@ -6,7 +6,7 @@ interface IDataRepo {
   save: (data: Partial<Data>) => Promise<Data>;
   find: () => Promise<Data[]>;
   findOneBy: (payload: object) => Promise<Data>;
-  update: (id: string, payload: object) => Promise<UpdateResult>;
+  update: (id: string, payload: Partial<Data>) => Promise<UpdateResult>;
 }
 
 class DataRepo implements IDataRepo {
@@ -19,8 +19,8 @@ class DataRepo implements IDataRepo {
   public save = async (data: Partial<Data>) => this.ormRepo.save(data);
   public find = async () => this.ormRepo.find();
   public findOneBy = async (payload: object) => this.ormRepo.findOneBy(payload);
-  public update = async (id: string, payload: object) =>
-    this.ormRepo.update(id, payload);
+  public update = async (id: string, payload: Partial<Data>) =>
+    this.ormRepo.update(id, { ...payload });
 }
 
 export default new DataRepo();
