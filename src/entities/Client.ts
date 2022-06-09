@@ -1,5 +1,13 @@
-import { PrimaryGeneratedColumn, Column, Entity, OneToMany } from "typeorm";
+import {
+  PrimaryGeneratedColumn,
+  Column,
+  Entity,
+  OneToMany,
+  OneToOne,
+  JoinColumn,
+} from "typeorm";
 import { v4 as uuid4 } from "uuid";
+import Data from "./Data";
 import QueryMhRisk from "./QueryMhRisk";
 
 @Entity("clients")
@@ -12,6 +20,10 @@ export default class Client {
 
   @Column({ type: "int" })
   subscription: number;
+
+  @OneToOne(() => Data)
+  @JoinColumn({ name: "data_id" })
+  data: Data;
 
   @OneToMany(() => QueryMhRisk, (queriesMhRisk) => queriesMhRisk.client)
   queriesMhRisk: QueryMhRisk[];

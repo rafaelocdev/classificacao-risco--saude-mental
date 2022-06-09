@@ -7,7 +7,8 @@ import {
   JoinColumn,
 } from "typeorm";
 import { v4 as uuid4 } from "uuid";
-import Client from "./Clients";
+import Client from "./Client";
+import ResultMhRisk from "./ResultMhRisk";
 
 @Entity("query_mh_risk")
 export default class QueryMhRisk {
@@ -38,6 +39,13 @@ export default class QueryMhRisk {
   @ManyToOne(() => Client, (client) => client.queriesMhRisk)
   @JoinColumn({ name: "client_id" })
   client: Client;
+
+  @ManyToOne(() => ResultMhRisk, (resultMhRisk) => resultMhRisk.queryMhRisk, {
+    nullable: true,
+    eager: true,
+  })
+  @JoinColumn({ name: "result_mh_risk_id", referencedColumnName: "risk" })
+  resultMhRisk: ResultMhRisk;
 
   constructor() {
     if (!this.id) {
