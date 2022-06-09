@@ -11,13 +11,13 @@ export class createAllTables1654722363585 implements MigrationInterface {
       `CREATE TABLE "clients" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying(255) NOT NULL, "subscription" integer NOT NULL, CONSTRAINT "PK_f1ab7cf3a5714dbc6bb4e1c28a4" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
-      `CREATE TABLE "data" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "cpf" integer NOT NULL, "birthday" character varying(20) NOT NULL, "gender" character(1) NOT NULL, "email" character varying(255) NOT NULL, "mobile" integer NOT NULL, "street" character varying(255) NOT NULL, "number" integer NOT NULL, "complement" character varying(50) NOT NULL, "zip" integer NOT NULL, "city" character varying(255) NOT NULL, "state" character(2) NOT NULL, CONSTRAINT "UQ_87465aba2ccd4e4a3c6a5918fbc" UNIQUE ("cpf"), CONSTRAINT "PK_2533602bd9247937e3a4861e173" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "data" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "cpf" character(11) NOT NULL, "birthday" character varying(20) NOT NULL, "gender" character(1) NOT NULL, "email" character varying(255) NOT NULL, "mobile" integer NOT NULL, "street" character varying(255) NOT NULL, "number" integer NOT NULL, "complement" character varying(50) NOT NULL, "zip" integer NOT NULL, "city" character varying(255) NOT NULL, "state" character(2) NOT NULL, CONSTRAINT "UQ_87465aba2ccd4e4a3c6a5918fbc" UNIQUE ("cpf"), CONSTRAINT "PK_2533602bd9247937e3a4861e173" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE TYPE "public"."employees_job_enum" AS ENUM('Enfermeiro(a)', 'Médico(a)', 'Administrador(a)')`,
     );
     await queryRunner.query(
-      `CREATE TYPE "public"."employees_specialty_enum" AS ENUM('Psiquiatria')`,
+      `CREATE TYPE "public"."employees_specialty_enum" AS ENUM('Psiquiatria', 'Admin')`,
     );
     await queryRunner.query(
       `CREATE TABLE "employees" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying(255) NOT NULL, "password" character varying(50) NOT NULL, "register" character varying(50) NOT NULL, "job" "public"."employees_job_enum" NOT NULL, "specialty" "public"."employees_specialty_enum", CONSTRAINT "PK_b9535a98350d5b26e7eb0c26af4" PRIMARY KEY ("id"))`,
