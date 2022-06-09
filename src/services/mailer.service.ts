@@ -1,7 +1,7 @@
 import path from "path";
 import hbs from "nodemailer-express-handlebars";
 import transportMailer from "../config/mailer.config";
-// import { ErrorHandler } from "../errors";
+import { ErrorHandler } from "../errors/errors";
 
 interface IWelcomeEmail {
   name: string;
@@ -41,8 +41,7 @@ class mailerService {
   private mailSender = (mailOptions) => {
     transportMailer.sendMail(mailOptions, (err) => {
       if (err) {
-        // retornar error personalizado
-        return err;
+        throw new ErrorHandler(424, "Email could not be sent.");
       }
     });
 
@@ -68,7 +67,7 @@ class mailerService {
       },
     };
 
-    this.mailSender(mailOptions);
+    return this.mailSender(mailOptions);
   };
 
   pendingAppointmentsEmail = (data: IPendingEmail) => {
@@ -87,7 +86,7 @@ class mailerService {
       },
     };
 
-    this.mailSender(mailOptions);
+    return this.mailSender(mailOptions);
   };
 }
 
