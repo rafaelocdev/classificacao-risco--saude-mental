@@ -1,6 +1,6 @@
 import { errorHandler, ErrorHandler } from "../../../errors/errors";
 
-describe("Error Handler | Units Tests", () => {
+describe("Error Handler | Unit Tests", () => {
   it("Testing errorHandler", () => {
     try {
       throw new ErrorHandler(404, "test error");
