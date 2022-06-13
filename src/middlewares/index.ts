@@ -1,3 +1,4 @@
 import validateTokenMiddleware from "./validateToken.middleware";
+import validateSchema from "./validateSchema.middleware";
 
-export { validateTokenMiddleware };
+export { validateTokenMiddleware, validateSchema };

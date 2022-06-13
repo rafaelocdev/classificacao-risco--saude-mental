@@ -12,10 +12,10 @@ const validateSchema =
 
       req.validated = validated;
 
-      return next;
+      return next();
     } catch (err) {
       return res.status(400).json({ error: err.errors });
     }
   };
 
-export default validateSchema;
+export default validateSchema;                                                                                                                                    
