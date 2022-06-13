@@ -9,27 +9,32 @@ class AdminService {
   registerClient = async ({
     validated,
   }: Request): Promise<AssertsShape<any>> => {
-    const basicData = {
-      name: validated.name,
-      subscription: validated.subscription,
-    };
+    const newClient = new Client();
 
-    const newClient = await clientRepo.save(basicData);
+    newClient.name = validated.name;
+    newClient.subscription = validated.subscription;
 
-    newClient.data = new Data();
-    newClient.data.cpf = validated.data.cpf;
-    newClient.data.birthday = validated.data.birthday;
-    newClient.data.gender = validated.data.gender;
-    newClient.data.email = validated.data.email;
-    newClient.data.mobile = validated.data.mobile;
-    newClient.data.street = validated.data.street;
-    newClient.data.number = validated.data.number;
-    newClient.data.complement = validated.data.complement;
-    newClient.data.zip = validated.data.zip;
-    newClient.data.city = validated.data.city;
-    newClient.data.state = validated.data.state;
+    await clientRepo.save(newClient);
 
-    await dataRepo.save(newClient.data);
+    const newClientData = new Data();
+
+    newClientData.cpf = validated.data.cpf;
+    newClientData.birthday = validated.data.birthday;
+    newClientData.gender = validated.data.gender;
+    newClientData.email = validated.data.email;
+    newClientData.mobile = validated.data.mobile;
+    newClientData.street = validated.data.street;
+    newClientData.number = validated.data.number;
+    newClientData.complement = validated.data.complement;
+    newClientData.zip = validated.data.zip;
+    newClientData.city = validated.data.city;
+    newClientData.state = validated.data.state;
+
+    await dataRepo.save(newClientData);
+
+    newClient.data = newClientData;
+
+    await clientRepo.save(newClient);
 
     return serializedData.validate(newClient, { stripUnknown: true });
   };
