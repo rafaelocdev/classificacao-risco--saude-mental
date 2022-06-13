@@ -16,7 +16,7 @@ export default class Employee {
   @Column({ length: 255 })
   name: string;
 
-  @Column({ length: 50 })
+  @Column()
   password: string;
 
   @Column({ length: 50 })
