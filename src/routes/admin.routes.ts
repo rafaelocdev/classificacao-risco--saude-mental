@@ -1,4 +1,5 @@
 import { Router } from "express";
+import adminControllers from "../controller/admin.controllers";
 
 const adminRouter = Router();
 
@@ -10,7 +11,7 @@ adminRouter.get("/employees");
 adminRouter.patch("/employees/:employeeId");
 
 // Registar clientes
-adminRouter.post("/clients/register");
+adminRouter.post("/clients/register", adminControllers.registerClient);
 // Listar clientes
 adminRouter.get("/clients");
 // Alterar clientes
