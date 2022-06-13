@@ -6,6 +6,7 @@ declare global {
     interface Request {
       decoded: Partial<Employee>;
       validated: Client;
+      user: Partial<Client|Employee>
     }
   }
 }
