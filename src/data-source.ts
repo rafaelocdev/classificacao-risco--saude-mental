@@ -28,6 +28,15 @@ const AppDataSourceProd = new DataSource({
   migrations: [path.join(__dirname, "/migrations/**/*.{ts,js}")],
 });
 
+const AppDataSourceTest = new DataSource({
+  type: "sqlite",
+  database: "../dbTest.sqlite",
+  synchronize: true,
+  entities: [path.join(__dirname, "/entities/**/*.{js,ts}")],
+});
+
 export default process.env.NODE_ENV === "production"
   ? AppDataSourceProd
+  : process.env.NODE_ENV === "test"
+  ? AppDataSourceTest
   : AppDataSourceDev;
