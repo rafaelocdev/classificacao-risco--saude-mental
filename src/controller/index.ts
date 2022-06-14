@@ -1,6 +1,6 @@
-import adminService from "./admin.controllers";
-import doctorService from "./doctor.controllers";
-import nurseService from "./doctor.controllers";
+import adminController from "./admin.controllers";
+import doctorController from "./doctor.controllers";
+import nurseController from "./doctor.controllers";
 import loginController from "./login.controller";
 
-export { adminService, doctorService, nurseService, loginController };
+export { adminController, doctorController, nurseController, loginController };

@@ -1,4 +1,8 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
+import { hashSync } from "bcrypt";
+import { config } from "dotenv";
+
+config();
 
 export class createAdminUser1654779577434 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -19,7 +23,10 @@ export class createAdminUser1654779577434 implements MigrationInterface {
         INSERT INTO "employees"
             ("name", "password", "register", "job", "specialty", "data_id")
         VALUES
-            ('Admin', '1234', '1234', 'Administrador(a)', 'Admin', '${admin[0].id}')
+            ('Admin', '${hashSync(
+              process.env.ADMIN_PWD,
+              10,
+            )}', '1234', 'Administrador(a)', 'Admin', '${admin[0].id}')
     `);
   }
 
