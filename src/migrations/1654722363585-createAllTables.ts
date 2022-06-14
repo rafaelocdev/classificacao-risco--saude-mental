@@ -20,7 +20,7 @@ export class createAllTables1654722363585 implements MigrationInterface {
       `CREATE TYPE "public"."employees_specialty_enum" AS ENUM('Psiquiatria', 'Admin')`,
     );
     await queryRunner.query(
-      `CREATE TABLE "employees" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying(255) NOT NULL, "password" character varying(50) NOT NULL, "register" character varying(50) NOT NULL, "job" "public"."employees_job_enum" NOT NULL, "specialty" "public"."employees_specialty_enum", CONSTRAINT "PK_b9535a98350d5b26e7eb0c26af4" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "employees" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying(255) NOT NULL, "password" character varying NOT NULL, "register" character varying(50) NOT NULL, "job" "public"."employees_job_enum" NOT NULL, "specialty" "public"."employees_specialty_enum", CONSTRAINT "PK_b9535a98350d5b26e7eb0c26af4" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE TABLE "on_duty" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "on_duty" boolean NOT NULL DEFAULT false, "available" boolean NOT NULL DEFAULT false, CONSTRAINT "PK_83937bf600f1bf514081360b9db" PRIMARY KEY ("id"))`,

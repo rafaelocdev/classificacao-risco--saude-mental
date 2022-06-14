@@ -19,4 +19,4 @@ const validateSchema =
     }
   };
 
-export default validateSchema;
+export default validateSchema;                                                                                                                                    
