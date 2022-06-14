@@ -4,6 +4,8 @@ import { dataRepo } from "../repositories";
 import { Client, Data } from "../entities";
 import { AssertsShape } from "yup/lib/object";
 import { serializedData } from "../schemas";
+import { employeeRepo } from "../repositories"
+import { getAllEmployeesSchema } from "../schemas/admin";
 
 class AdminService {
   registerClient = async ({
@@ -38,6 +40,13 @@ class AdminService {
 
     return serializedData.validate(newClient, { stripUnknown: true });
   };
+
+  getAllEmployees = async () =>{
+      const employees = await employeeRepo.find();
+
+      return await getAllEmployeesSchema.validate(employees, {stripUnknown: true});
+  };
 }
 
 export default new AdminService();
+
