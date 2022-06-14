@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { AdminController } from "../controller";
+import { adminController } from "../controller";
 
 const adminRouter = Router();
 
@@ -13,7 +13,7 @@ adminRouter.patch("/employees/:employeeId");
 // Registar clientes
 adminRouter.post("/clients/register");
 // Listar clientes
-adminRouter.get("/clients", AdminController.getClients);
+adminRouter.get("/clients", adminController.getClients);
 // Alterar clientes
 adminRouter.patch("/clients/:clientId");
 // Deletar clientes
