@@ -1,11 +1,12 @@
 import { Router } from "express";
+import { adminController } from "../controller";
 
 const adminRouter = Router();
 
 // Registar funcionarios
 adminRouter.post("/employees/register");
 // Listar funcionarios
-adminRouter.get("/employees");
+adminRouter.get("/employees", adminController.getAllEmployees);
 // Alterar funcionarios
 adminRouter.patch("/employees/:employeeId");
 
