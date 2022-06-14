@@ -2,4 +2,8 @@ build:
   docker:
     web: Dockerfile
 run:
-  web: bash -c 'yarn migration:run && yarn start'
+  web: yarn start
+release:
+  image: web
+  command:
+    - yarn migration:run
