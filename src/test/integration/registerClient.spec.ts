@@ -1,22 +1,41 @@
-import { Connection } from "..";
+import supertest from "supertest";
+import app from "../../app";
+import { faker } from "@faker-js/faker";
+import { DataSource } from "typeorm";
+import AppDataSource from "../../data-source";
+import Database from "..";
 
-describe("Register Client | Integration Tests", () => {
-  const dbConnection = new Connection();
+describe("Create user route | Integration Test", () => {
+  const database = new Database();
+  database.createConnectionBeforeAll();
+  database.closeConnectionAfterAll();
 
-  beforeAll(async () => {
-    await dbConnection.create();
-  });
+  it("Should return an Client as JSON response with status code 201", async () => {
+    const client = {
+      name: faker.name.firstName() + " " + faker.name.findName(),
+      subscription: faker.random.numeric(20),
+      data: {
+        cpf: faker.random.numeric(11),
+        birthday: "16/04/1987",
+        gender: faker.datatype.string(1),
+        email: faker.internet.email(),
+        mobile: faker.random.numeric(11),
+        street: faker.name.firstName(),
+        number: faker.random.numeric(3),
+        complement: faker.datatype.string(5),
+        zip: faker.random.numeric(8),
+        city: faker.address.cityName(),
+        state: faker.address.countryCode("alpha-2"),
+      },
+    };
 
-  afterAll(async () => {
-    await dbConnection.clear();
-    await dbConnection.close();
-  });
+    const response = await supertest(app)
+      .post("/admin/clients/register")
+      .send({ ...client });
 
-  afterEach(async () => {
-    await dbConnection.clear();
-  });
-
-  it("should register a new client", async () => {
-    expect(true).toBe(true);
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty("id");
+    expect(response.body.data).toHaveProperty("id");
+    expect(response.body.data.email).toStrictEqual(client.data.email);
   });
 });
