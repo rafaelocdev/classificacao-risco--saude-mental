@@ -9,6 +9,7 @@ import {
   resultMhRiskRepo,
 } from "../repositories";
 import * as uuid from "uuid";
+import { serializedClient, serializedClientWithAppointments } from "../schemas";
 
 interface IClientById {
   client: Client;
@@ -27,7 +28,7 @@ export default class DoctorService {
     const client = await clientRepo.findOneBy({ data: { id: clientId } });
 
     if (!client) {
-      throw new ErrorHandler(404, "User not found");
+      throw new ErrorHandler(404, "Client not found");
     }
 
     client.data = await dataRepo.findOneBy({ id: clientId });
@@ -37,15 +38,17 @@ export default class DoctorService {
     });
 
     if (!mhRisk) {
-      return client;
+      return await serializedClient.validate(client, { stripUnknown: true });
     }
 
     const appointment = await appointmentRepo.listOne({
       queryMhRisk: mhRisk.id,
     });
 
-    const clientById: IClientById = { client, mhRisk, appointment };
+    const clientWithAppointments: IClientById = { client, mhRisk, appointment };
 
-    return clientById;
+    return serializedClientWithAppointments.validate(clientWithAppointments, {
+      stripUnknown: true,
+    });
   };
 }
