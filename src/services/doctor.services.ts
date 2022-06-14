@@ -1,12 +1,11 @@
 import { Request } from "express";
-import { Appointment, Client, Data, QueryMhRisk } from "../entities";
+import { Appointment, Client, QueryMhRisk } from "../entities";
 import { ErrorHandler } from "../errors/errors";
 import {
   appointmentRepo,
   clientRepo,
   dataRepo,
   queryMhRiskRepo,
-  resultMhRiskRepo,
 } from "../repositories";
 import * as uuid from "uuid";
 import { serializedClient, serializedClientWithAppointments } from "../schemas";
@@ -18,7 +17,7 @@ interface IClientById {
 }
 
 export default class DoctorService {
-  getById = async ({ params }: Request) => {
+  getClientById = async ({ params }: Request) => {
     const { clientId } = params;
 
     if (!uuid.validate(clientId)) {
