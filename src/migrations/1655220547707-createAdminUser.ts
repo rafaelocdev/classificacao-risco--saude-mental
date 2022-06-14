@@ -4,7 +4,7 @@ import { config } from "dotenv";
 
 config();
 
-export class createAdminUser1654779577434 implements MigrationInterface {
+export class createAdminUser1655220547707 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
         INSERT INTO "data"
@@ -32,8 +32,8 @@ export class createAdminUser1654779577434 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-        DELETE FROM "employees"
-        DELETE FROM "data"
-    `);
+    DELETE FROM "employees"
+    DELETE FROM "data"
+`);
   }
 }

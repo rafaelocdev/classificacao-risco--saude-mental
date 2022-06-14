@@ -15,8 +15,8 @@ export default class QueryMhRisk {
   @PrimaryGeneratedColumn("uuid")
   id?: string;
 
-  @Column({ type: "enum", enum: [1, 2, 3] })
-  depression: number;
+  @Column()
+  depression: string;
 
   @Column({ type: "boolean", name: "self_aggression" })
   selfAggression: boolean;

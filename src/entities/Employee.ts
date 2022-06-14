@@ -22,13 +22,10 @@ export default class Employee {
   @Column({ length: 50 })
   register: string;
 
-  @Column({
-    type: "enum",
-    enum: ["Enfermeiro(a)", "Médico(a)", "Administrador(a)"],
-  })
+  @Column()
   job: string;
 
-  @Column({ type: "enum", enum: ["Psiquiatria"], nullable: true })
+  @Column()
   specialty: string;
 
   // @ManyToOne(() => Job, (job) => job.employees)

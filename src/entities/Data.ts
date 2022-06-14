@@ -6,37 +6,37 @@ export default class Data {
   @PrimaryGeneratedColumn("uuid")
   id?: string;
 
-  @Column({ type: "int", unique: true })
-  cpf: number;
+  @Column({ unique: true })
+  cpf: string;
 
   @Column({ length: 20 })
   birthday: string;
 
-  @Column({ type: "char", length: 1 })
+  @Column({ length: 1 })
   gender: string;
 
   @Column({ length: 255 })
   email: string;
 
-  @Column({ type: "int" })
-  mobile: number;
+  @Column()
+  mobile: string;
 
   @Column({ length: 255 })
   street: string;
 
-  @Column({ type: "int" })
+  @Column()
   number: number;
 
   @Column({ length: 50 })
   complement: string;
 
-  @Column({ type: "int" })
-  zip: number;
+  @Column()
+  zip: string;
 
   @Column({ length: 255 })
   city: string;
 
-  @Column({ type: "char", length: 2 })
+  @Column({ length: 2 })
   state: string;
 
   constructor() {

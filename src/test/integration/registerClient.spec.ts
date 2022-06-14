@@ -4,16 +4,19 @@ describe("Register Client | Integration Tests", () => {
   const dbConnection = new Connection();
 
   beforeAll(async () => {
-    dbConnection.create();
+    await dbConnection.create();
   });
 
   afterAll(async () => {
-    dbConnection.close();
+    await dbConnection.clear();
+    await dbConnection.close();
   });
 
   afterEach(async () => {
-    dbConnection.clear();
+    await dbConnection.clear();
   });
 
-  it("should register a new client", async () => {});
+  it("should register a new client", async () => {
+    expect(true).toBe(true);
+  });
 });

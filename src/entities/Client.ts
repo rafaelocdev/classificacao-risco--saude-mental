@@ -18,8 +18,8 @@ export default class Client {
   @Column({ length: 255 })
   name: string;
 
-  @Column({ type: "int" })
-  subscription: number;
+  @Column()
+  subscription: string;
 
   @OneToOne(() => Data)
   @JoinColumn({ name: "data_id" })
