@@ -11,24 +11,24 @@ class AdminService {
   }: Request): Promise<AssertsShape<any>> => {
     const newClient = new Client();
 
-    newClient.name = validated.name;
-    newClient.subscription = validated.subscription;
+    newClient.name = (validated as Client).name;
+    newClient.subscription = (validated as Client).subscription;
 
     await clientRepo.save(newClient);
 
     const newClientData = new Data();
 
-    newClientData.cpf = validated.data.cpf;
-    newClientData.birthday = validated.data.birthday;
-    newClientData.gender = validated.data.gender;
-    newClientData.email = validated.data.email;
-    newClientData.mobile = validated.data.mobile;
-    newClientData.street = validated.data.street;
-    newClientData.number = validated.data.number;
-    newClientData.complement = validated.data.complement;
-    newClientData.zip = validated.data.zip;
-    newClientData.city = validated.data.city;
-    newClientData.state = validated.data.state;
+    newClientData.cpf = (validated as Client).data.cpf;
+    newClientData.birthday = (validated as Client).data.birthday;
+    newClientData.gender = (validated as Client).data.gender;
+    newClientData.email = (validated as Client).data.email;
+    newClientData.mobile = (validated as Client).data.mobile;
+    newClientData.street = (validated as Client).data.street;
+    newClientData.number = (validated as Client).data.number;
+    newClientData.complement = (validated as Client).data.complement;
+    newClientData.zip = (validated as Client).data.zip;
+    newClientData.city = (validated as Client).data.city;
+    newClientData.state = (validated as Client).data.state;
 
     await dataRepo.save(newClientData);
 
