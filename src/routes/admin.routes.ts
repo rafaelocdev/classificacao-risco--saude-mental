@@ -1,5 +1,14 @@
 import { Router } from "express";
 
+// controllers
+import adminControllers from "../controller/admin.controllers";
+
+// middlewares
+import { validateSchema } from "../middlewares";
+
+// schemas
+import { registerClientSchema } from "../schemas";
+
 const adminRouter = Router();
 
 // Registar funcionarios
@@ -10,7 +19,11 @@ adminRouter.get("/employees");
 adminRouter.patch("/employees/:employeeId");
 
 // Registar clientes
-adminRouter.post("/clients/register");
+adminRouter.post(
+  "/clients/register",
+  validateSchema(registerClientSchema),
+  adminControllers.registerClient
+);
 // Listar clientes
 adminRouter.get("/clients");
 // Alterar clientes
