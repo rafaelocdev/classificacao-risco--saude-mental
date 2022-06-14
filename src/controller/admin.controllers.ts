@@ -14,7 +14,7 @@ export class AdminController {
     return res.status(200).json({ employees });
   };
 
-  getClients = async (req: Request, res: Response) => {
+  getClients = async (_: Request, res: Response) => {
     const clients = await adminService.getClients();
 
     return res.status(200).json({ clients });
