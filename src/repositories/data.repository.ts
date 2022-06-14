@@ -19,7 +19,7 @@ class DataRepo implements IDataRepo {
   public save = async (data: Partial<Data>) => await this.ormRepo.save(data);
   public find = async () => await this.ormRepo.find();
   public findOneBy = async (payload: object) =>
-    await this.ormRepo.findOneBy(payload);
+    await this.ormRepo.findOneBy({ ...payload });
   public update = async (id: string, payload: Partial<Data>) =>
     await this.ormRepo.update(id, { ...payload });
 }
