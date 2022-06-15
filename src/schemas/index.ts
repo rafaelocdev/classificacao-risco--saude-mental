@@ -4,13 +4,16 @@ import {
   serializedData,
   getAllEmployeesSchema,
 } from "./admin";
-import loginSchema from "./employee/login.schema";
+import loginSchema from "./login/login.schema";
+import { serializedClient, serializedClientWithAppointments } from "./doctor";
 
 export {
-  getAllEmployeesSchema,
   updateClientSchema,
   serializedUpdatedClientSchema,
   registerClientSchema,
   serializedData,
+  getAllEmployeesSchema,
   loginSchema,
+  serializedClient,
+  serializedClientWithAppointments,
 };

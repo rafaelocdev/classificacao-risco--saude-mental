@@ -27,7 +27,7 @@ adminRouter.post(
   adminController.registerClient
 );
 // Listar clientes
-adminRouter.get("/clients");
+adminRouter.get("/clients", adminController.getClients);
 // Alterar clientes
 adminRouter.patch(
   "/clients/:id",
@@ -36,8 +36,10 @@ adminRouter.patch(
   verifyUserByIdOr404,
   adminController.updateClient
 );
+
 // Deletar clientes
-adminRouter.delete("/clients/:id");
+// adminRouter.delete("/clients/:id");
+adminRouter.delete("/clients/:clientId", adminController.deleteClient);
 
 // Alterar procedimentos
 adminRouter.get("/procedures/:risk");

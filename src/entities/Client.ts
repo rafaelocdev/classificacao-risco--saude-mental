@@ -15,14 +15,13 @@ export default class Client {
   @PrimaryGeneratedColumn("uuid")
   id?: string;
 
-  @Column({ length: 255 })
+  @Column()
   name: string;
 
-  @Column({ type: "int" })
-  subscription: number;
+  @Column({ unique: true })
+  subscription: string;
 
   @OneToOne(() => Data, { eager: true, nullable: false })
-  // @OneToOne(() => Data, { eager: true })
   @JoinColumn({ name: "data_id" })
   data: Data;
 

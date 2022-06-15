@@ -1,44 +1,56 @@
 import { Request } from "express";
 import { clientRepo } from "../repositories";
 import { dataRepo } from "../repositories";
-import { Client, Data } from "../entities";
-import { AssertsShape } from "yup/lib/object";
-import { serializedData } from "../schemas";
 import { employeeRepo } from "../repositories";
+import { Client, Data } from "../entities";
+import { serializedData } from "../schemas";
 import { getAllEmployeesSchema } from "../schemas";
 import { serializedUpdatedClientSchema } from "../schemas";
+import { AssertsShape } from "yup/lib/object";
 import { ErrorHandler } from "../errors/errors";
 
 interface IReceivedUserData {
   name: string;
-  subscription: number;
+  subscription: string;
   data: Partial<IData>;
 }
 
 interface IData {
-  cpf: number;
+  cpf: string;
   birthday: string;
   gender: string;
   email: string;
-  mobile: number;
+  mobile: string;
   street: string;
-  number: number;
+  number: string;
   complement: string;
-  zip: number;
+  zip: string;
   city: string;
   state: string;
 }
+
 
 class AdminService {
   registerClient = async ({
     validated,
   }: Request): Promise<AssertsShape<any>> => {
-    const newClient = new Client();
+    const subscriptionAlreadyRegistered = await clientRepo.findOneBy({
+      subscription: (validated as Client).subscription,
+    });
 
-    newClient.name = (validated as Client).name;
-    newClient.subscription = (validated as Client).subscription;
+    const cpfAlreadyRegistered = await dataRepo.findOneBy({
+      cpf: (validated as Client).data.cpf,
+    });
 
-    await clientRepo.save(newClient);
+    const emailAlreadyRegistered = await dataRepo.findOneBy({
+      email: (validated as Client).data.email,
+    });
+
+    if (subscriptionAlreadyRegistered || cpfAlreadyRegistered)
+      throw new ErrorHandler(409, "Client already registered.");
+
+    if (emailAlreadyRegistered)
+      throw new ErrorHandler(409, "Email already registered.");
 
     const newClientData = new Data();
 
@@ -56,6 +68,10 @@ class AdminService {
 
     await dataRepo.save(newClientData);
 
+    const newClient = new Client();
+
+    newClient.name = (validated as Client).name;
+    newClient.subscription = (validated as Client).subscription;
     newClient.data = newClientData;
 
     await clientRepo.save(newClient);
@@ -79,7 +95,15 @@ class AdminService {
 
     const dataClient = { name, subscription };
 
-    // data && (await dataRepo.update(user.data.id, { ...data }));
+    if (subscription) {
+      const foundSubscription = await clientRepo.findOneBy({
+        subscription: subscription,
+      });
+
+      if (foundSubscription && foundSubscription.id !== user.id) {
+        throw new ErrorHandler(409, "Subscription already exists.");
+      }
+    }
 
     if (data) {
       if (data.cpf) {
@@ -89,16 +113,44 @@ class AdminService {
           throw new ErrorHandler(409, "CPF already exists.");
         }
       }
+
+      if (data.email) {
+        const foundEmailData = await dataRepo.findOneBy({ cpf: data.email });
+
+        if (foundEmailData && foundEmailData.id !== user.data.id) {
+          throw new ErrorHandler(409, "Email already exists.");
+        }
+      }
       await dataRepo.update(user.data.id, { ...data });
     }
 
-    await clientRepo.update(user.id, { ...dataClient });
+    if (name || subscription) {
+      await clientRepo.update(user.id, { ...dataClient });
+    }
 
     const updatedClient = await clientRepo.findOneBy({ id: user.id });
 
     return serializedUpdatedClientSchema.validate(updatedClient, {
       stripUnknown: true,
     });
+  };
+
+  getClients = async () => {
+    const clients = await clientRepo.find();
+
+    return clients;
+  };
+
+  deleteClient = async (clientId: string) => {
+    const foundUser = await clientRepo.findOneBy({
+      id: clientId,
+    });
+
+    if (!foundUser) throw new ErrorHandler(400, "User not found.");
+
+    await clientRepo.delete(clientId);
+
+    return { message: "User deleted successfully!" };
   };
 }
 

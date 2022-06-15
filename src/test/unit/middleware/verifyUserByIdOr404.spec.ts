@@ -17,19 +17,19 @@ describe("Verify User by ID or 404 - Middleware | Unit tests", () => {
 
   const newUserClient = {
     name: "Maria",
-    subscription: 154532465,
+    subscription: "154532465",
   };
 
   const newUserData = {
-    cpf: 35634556815,
+    cpf: "35634556815",
     birthday: "25/04/1987",
     gender: "M",
     email: "teste@teste.com",
-    mobile: 3140263598,
+    mobile: "3140263598",
     street: "rua sem calçamento",
-    number: 9999,
+    number: "9999",
     complement: "fundos",
-    zip: 35790987,
+    zip: "35790987",
     city: "teste",
     state: "RJ",
   };
