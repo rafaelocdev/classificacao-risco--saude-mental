@@ -1,9 +1,10 @@
 build:
   docker:
-    web: Dockerfile-deploy
+    web: Dockerfile
 run:
   web: yarn start
 release:
   image: web
   command:
     - yarn migration:run
+    - yarn build
