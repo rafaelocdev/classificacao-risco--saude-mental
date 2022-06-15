@@ -8,7 +8,7 @@ import { employeeRepo } from "../repositories";
 import { getAllEmployeesSchema } from "../schemas";
 import { serializedUpdatedClientSchema } from "../schemas";
 
-interface IReceivedClientData {
+interface IReceivedUserData {
   name: string;
   subscription: number;
   data: object;
@@ -56,14 +56,14 @@ class AdminService {
   };
 
   updateClient = async ({ validated, decoded, user }: Request) => {
-    const validatedData: object = validated;
+    const validatedData = validated as Partial<IReceivedUserData>;
 
-    const { name, subscription, data }: IReceivedClientData =
-      validatedData as IReceivedClientData;
+    const { name, subscription, data }: IReceivedUserData =
+      validatedData as IReceivedUserData;
 
     const dataClient = { name, subscription };
 
-    await dataRepo.update(user.data.id, { ...data });
+    data && (await dataRepo.update(user.data.id, { ...data }));
 
     await clientRepo.update(user.id, { ...dataClient });
 
@@ -75,4 +75,5 @@ class AdminService {
   };
 }
 
+export { IReceivedUserData };
 export default new AdminService();

@@ -32,7 +32,7 @@ adminRouter.get("/clients");
 adminRouter.patch(
   "/clients/:id",
   validateSchema(updateClientSchema),
-  validateTokenMiddleware,
+  // validateTokenMiddleware,
   getUserByIdOr404,
   adminController.updateClient
 );
