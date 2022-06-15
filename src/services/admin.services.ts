@@ -36,13 +36,6 @@ class AdminService {
     if (emailAlreadyRegistered)
       throw new ErrorHandler(409, "Email already registered.");
 
-    const newClient = new Client();
-
-    newClient.name = (validated as Client).name;
-    newClient.subscription = (validated as Client).subscription;
-
-    await clientRepo.save(newClient);
-
     const newClientData = new Data();
 
     newClientData.cpf = (validated as Client).data.cpf;
@@ -59,6 +52,10 @@ class AdminService {
 
     await dataRepo.save(newClientData);
 
+    const newClient = new Client();
+
+    newClient.name = (validated as Client).name;
+    newClient.subscription = (validated as Client).subscription;
     newClient.data = newClientData;
 
     await clientRepo.save(newClient);

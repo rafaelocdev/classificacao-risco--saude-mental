@@ -1,69 +1,42 @@
-// import { Connection } from "..";
 import supertest from "supertest";
 import app from "../../app";
-import { DataSource } from "typeorm";
-import AppDataSource from "../../data-source";
+import database from "..";
 
-const newUserClient = {
-  name: "teste",
-  subscription: "154532465",
-  data: {
-    cpf: "35634556815",
-    birthday: "25/04/1987",
-    gender: "M",
-    email: "teste@teste.com",
-    mobile: "3140263598",
-    street: "rua sem calçamento",
-    number: "9999",
-    complement: "fundos",
-    zip: "35790987",
-    city: "teste",
-    state: "RJ",
-  },
-};
-
-describe("Register Client | Integration Tests", () => {
-  let connection: DataSource;
-
+describe("Register client route | Integration Test", () => {
   beforeAll(async () => {
-    await AppDataSource.initialize()
-      .then((res) => (connection = res))
-      .catch((err) => {
-        console.error("Error during Data Source initialization", err);
-      });
+    await database.createConnection();
   });
 
   afterAll(async () => {
-    await connection.destroy();
-  });
-
-  // const dbConnection = new Connection();
-
-  // beforeAll(async () => {
-  //   await dbConnection.create();
-  // });
-
-  // afterAll(async () => {
-  //   await dbConnection.clear();
-  //   await dbConnection.close();
-  // });
-
-  // afterEach(async () => {
-  //   await dbConnection.clear();
-  // });
-
-  it("should register a new client", async () => {
-    expect(true).toBe(true);
+    await database.closeConnection();
   });
 
   it("Should return an Client as JSON response with status code 201", async () => {
+    const client = {
+      name: "John Doe 4",
+      subscription: "5432193",
+      data: {
+        cpf: "512356983",
+        birthday: "10/10/2010",
+        gender: "M",
+        email: "johndoe1@email.com",
+        mobile: "987654321",
+        street: "Nowhere St.",
+        number: "1",
+        complement: "apt. 999",
+        zip: "12345678",
+        city: "San Angels",
+        state: "DK",
+      },
+    };
+
     const response = await supertest(app)
       .post("/admin/clients/register")
-      .send({ ...newUserClient });
+      .send({ ...client });
 
     expect(response.status).toBe(201);
-    expect(response.body.name).toBeDefined();
-    expect(response.body.data).toHaveProperty("email");
-    expect(response.body.data.email).toStrictEqual(newUserClient.data.email);
+    expect(response.body).toHaveProperty("id");
+    expect(response.body.data).toHaveProperty("id");
+    expect(response.body.data.email).toStrictEqual(client.data.email);
   });
 });

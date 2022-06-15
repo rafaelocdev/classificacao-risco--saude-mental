@@ -18,14 +18,14 @@ export default class Appointment {
   @Column({ nullable: true })
   anamnesis?: string;
 
-  @Column({ length: 255, nullable: true })
+  @Column({ nullable: true })
   action?: string;
 
   @ManyToOne(() => OnDuty, (onDuty) => onDuty.appointments, { nullable: true })
   @JoinColumn({ name: "on_duty_id", referencedColumnName: "employee" })
   onDuty: OnDuty;
 
-  @OneToOne(() => QueryMhRisk)
+  @OneToOne(() => QueryMhRisk, { eager: true, nullable: false })
   @JoinColumn({ name: "query_mh_risk_id" })
   queryMhRisk: QueryMhRisk;
 
