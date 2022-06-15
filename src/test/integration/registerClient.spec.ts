@@ -1,31 +1,32 @@
 import supertest from "supertest";
 import app from "../../app";
-import { faker } from "@faker-js/faker";
-import { DataSource } from "typeorm";
-import AppDataSource from "../../data-source";
-import Database from "..";
+import database from "..";
 
-describe("Create user route | Integration Test", () => {
-  const database = new Database();
-  database.createConnectionBeforeAll();
-  database.closeConnectionAfterAll();
+describe("Register client route | Integration Test", () => {
+  beforeAll(async () => {
+    await database.createConnection();
+  });
+
+  afterAll(async () => {
+    await database.closeConnection();
+  });
 
   it("Should return an Client as JSON response with status code 201", async () => {
     const client = {
-      name: faker.name.firstName() + " " + faker.name.findName(),
-      subscription: faker.random.numeric(20),
+      name: "John Doe 4",
+      subscription: "5432193",
       data: {
-        cpf: faker.random.numeric(11),
-        birthday: "16/04/1987",
-        gender: faker.datatype.string(1),
-        email: faker.internet.email(),
-        mobile: faker.random.numeric(11),
-        street: faker.name.firstName(),
-        number: faker.random.numeric(3),
-        complement: faker.datatype.string(5),
-        zip: faker.random.numeric(8),
-        city: faker.address.cityName(),
-        state: faker.address.countryCode("alpha-2"),
+        cpf: "512356983",
+        birthday: "10/10/2010",
+        gender: "M",
+        email: "johndoe1@email.com",
+        mobile: "987654321",
+        street: "Nowhere St.",
+        number: "1",
+        complement: "apt. 999",
+        zip: "12345678",
+        city: "San Angels",
+        state: "DK",
       },
     };
 
