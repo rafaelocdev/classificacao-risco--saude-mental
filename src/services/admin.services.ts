@@ -9,6 +9,7 @@ import { AssertsShape } from "yup/lib/object";
 import { ErrorHandler } from "../errors/errors";
 
 class AdminService {
+  
   registerClient = async ({
     validated,
   }: Request): Promise<AssertsShape<any>> => {
@@ -60,6 +61,23 @@ class AdminService {
     return serializedData.validate(newClient, { stripUnknown: true });
   };
 
+
+  getAllEmployees = async () => {
+    const employees = await employeeRepo.find();
+
+    return await getAllEmployeesSchema.validate(employees, {
+      stripUnknown: true,
+    });
+  };
+
+
+  getClients = async () => {
+    const clients = await clientRepo.find();
+
+    return clients;
+  };
+
+
   deleteClient = async (clientId: string) => {
     const foundUser = await clientRepo.findOneBy({
       id: clientId,
@@ -72,6 +90,7 @@ class AdminService {
     return { message: "User deleted successfully!" };
   };
 
+
   getAllEmployees = async () => {
     const employees = await employeeRepo.find();
 
@@ -79,6 +98,7 @@ class AdminService {
       stripUnknown: true,
     });
   };
+
 }
 
 export default new AdminService();
