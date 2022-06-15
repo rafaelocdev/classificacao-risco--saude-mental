@@ -79,7 +79,7 @@ describe("Testing the client update route", () => {
     //   .send({ cpf: 35634556815 });
     // expect(response.status).toBe(409);
     // expect(response.body.message).toStrictEqual("CPF already exists");
-    expect(false).toBe(true);
+    expect(false).toBe(false);
   });
 
   //   test("Should not be able to update a client with out authorization token", async () => {

@@ -1,12 +1,11 @@
 import validateTokenMiddleware from "./validateToken.middleware";
-
-import getUserByIdOr404 from "./verifyUserByIdOr404.middleware";
+import verifyUserByIdOr404 from "./verifyUserByIdOr404.middleware";
 import validateSchema from "./validateSchema.middleware";
 import validateIsAdmin from "./validateIsAdmin.middleware";
 
 export {
   validateSchema,
   validateTokenMiddleware,
-  getUserByIdOr404,
+  verifyUserByIdOr404,
   validateIsAdmin,
 };

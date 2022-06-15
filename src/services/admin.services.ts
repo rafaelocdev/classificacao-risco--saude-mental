@@ -7,12 +7,28 @@ import { serializedData } from "../schemas";
 import { employeeRepo } from "../repositories";
 import { getAllEmployeesSchema } from "../schemas";
 import { serializedUpdatedClientSchema } from "../schemas";
+import { ErrorHandler } from "../errors/errors";
 
 interface IReceivedUserData {
   name: string;
   subscription: number;
-  data: object;
+  data: Partial<IData>;
 }
+
+interface IData {
+  cpf: number;
+  birthday: string;
+  gender: string;
+  email: string;
+  mobile: number;
+  street: string;
+  number: number;
+  complement: string;
+  zip: number;
+  city: string;
+  state: string;
+}
+
 class AdminService {
   registerClient = async ({
     validated,
@@ -63,7 +79,18 @@ class AdminService {
 
     const dataClient = { name, subscription };
 
-    data && (await dataRepo.update(user.data.id, { ...data }));
+    // data && (await dataRepo.update(user.data.id, { ...data }));
+
+    if (data) {
+      if (data.cpf) {
+        const foundCpfData = await dataRepo.findOneBy({ cpf: data.cpf });
+
+        if (foundCpfData && foundCpfData.id !== user.data.id) {
+          throw new ErrorHandler(409, "CPF already exists.");
+        }
+      }
+      await dataRepo.update(user.data.id, { ...data });
+    }
 
     await clientRepo.update(user.id, { ...dataClient });
 
@@ -75,5 +102,4 @@ class AdminService {
   };
 }
 
-export { IReceivedUserData };
 export default new AdminService();

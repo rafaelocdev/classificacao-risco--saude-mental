@@ -3,7 +3,8 @@ import QueryMhRisk from "./QueryMhRisk";
 
 @Entity("result_mh_risk")
 export default class ResultMhRisk {
-  @PrimaryColumn("varchar")
+  @PrimaryColumn("text")
+  // @PrimaryColumn("varchar")
   risk: string;
 
   @Column()

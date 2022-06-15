@@ -12,7 +12,8 @@ export default class Data {
   @Column({ length: 20 })
   birthday: string;
 
-  @Column({ type: "char", length: 1 })
+  // @Column({ type: "char", length: 1 })
+  @Column({ type: "text", length: 1 })
   gender: string;
 
   @Column({ length: 255 })
@@ -36,7 +37,8 @@ export default class Data {
   @Column({ length: 255 })
   city: string;
 
-  @Column({ type: "char", length: 2 })
+  // @Column({ type: "char", length: 2 })
+  @Column({ type: "text", length: 2 })
   state: string;
 
   constructor() {

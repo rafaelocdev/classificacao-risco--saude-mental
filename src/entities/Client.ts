@@ -22,6 +22,7 @@ export default class Client {
   subscription: number;
 
   @OneToOne(() => Data, { eager: true, nullable: false })
+  // @OneToOne(() => Data, { eager: true })
   @JoinColumn({ name: "data_id" })
   data: Data;
 

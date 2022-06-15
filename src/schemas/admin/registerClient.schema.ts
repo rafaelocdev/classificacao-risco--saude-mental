@@ -19,6 +19,7 @@ const registerClientSchema = yup.object().shape({
 });
 
 const serializedData = yup.object().shape({
+  id: yup.string().uuid().required(),
   name: yup.string().required(),
   subscription: yup.number().required(),
   data: yup.object().shape({

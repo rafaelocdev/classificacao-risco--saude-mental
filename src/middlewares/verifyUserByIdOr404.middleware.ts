@@ -3,7 +3,7 @@ import { ErrorHandler } from "../errors/errors";
 import clientRepository from "../repositories/client.repository";
 import employeeRepository from "../repositories/employee.repository";
 
-const getUserByIdOr404 = async (
+const verifyUserByIdOr404 = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -27,4 +27,4 @@ const getUserByIdOr404 = async (
   return next();
 };
 
-export default getUserByIdOr404;
+export default verifyUserByIdOr404;
