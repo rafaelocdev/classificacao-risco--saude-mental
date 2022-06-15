@@ -18,10 +18,7 @@ const AppDataSourceDev = new DataSource({
 
 const AppDataSourceProd = new DataSource({
   type: "postgres",
-  host: "postgresDB",
-  database: process.env.POSTGRES_DB,
-  username: process.env.POSTGRES_USER,
-  password: process.env.POSTGRES_PASSWORD,
+  url: `${process.env.DATABASE_URL}`,
   ssl: { rejectUnauthorized: false },
   logging: true,
   entities: [path.join(__dirname, "/entities/**/*.{ts,js}")],
