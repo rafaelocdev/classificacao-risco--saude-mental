@@ -7,6 +7,14 @@ class DoctorController {
 
     return res.status(200).json({ appointments });
   };
+
+  getClientById = async (req: Request, res: Response) => {
+    // const doctor = new doctorService();
+    // const client = await doctor.getClientById(req);
+    const client = await doctorService.getClientById(req);
+
+    return res.status(200).json(client);
+  };
 }
 
 export default new DoctorController();

@@ -4,7 +4,7 @@ import { doctorController } from "../controller";
 const doctorRouter = Router();
 
 // Buscar info cliente especifico (clientes - query-mh-risk - appointments - on_duty)
-doctorRouter.get("/clients/:clientId");
+doctorRouter.get("/clients/:clientId", doctorController.getClientById);
 
 // Buscar appointments -> considerar possibilidades de filtros para appointments não iniciados, em andamento e finalizados
 doctorRouter.get("/appointments", doctorController.getAppointments);
