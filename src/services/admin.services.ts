@@ -12,7 +12,21 @@ import { ErrorHandler } from "../errors/errors";
 interface IReceivedUserData {
   name: string;
   subscription: string;
-  data: object;
+  data: Partial<IData>;
+}
+
+interface IData {
+  cpf: string;
+  birthday: string;
+  gender: string;
+  email: string;
+  mobile: string;
+  street: string;
+  number: string;
+  complement: string;
+  zip: string;
+  city: string;
+  state: string;
 }
 class AdminService {
   registerClient = async ({
@@ -79,7 +93,7 @@ class AdminService {
 
     const dataClient = { name, subscription };
 
-    if (subscription){
+    if (subscription) {
       const foundSubscription = await clientRepo.findOneBy({
         subscription: subscription,
       });
@@ -107,26 +121,10 @@ class AdminService {
       }
       await dataRepo.update(user.data.id, { ...data });
     }
-    // ///////////////
 
-
-    // const cpfAlreadyRegistered = await dataRepo.findOneBy({
-    //   cpf: (validated as Client).data.cpf,
-    // });
-
-    // const emailAlreadyRegistered = await dataRepo.findOneBy({
-    //   email: (validated as Client).data.email,
-    // });
-
-    // if (subscriptionAlreadyRegistered || cpfAlreadyRegistered)
-    //   throw new ErrorHandler(409, "Client already registered.");
-
-    // if (emailAlreadyRegistered)
-    //   throw new ErrorHandler(409, "Email already registered.");
-    // //////////
-    // data && (await dataRepo.update(user.data.id, { ...data }));
-
-    await clientRepo.update(user.id, { ...dataClient });
+    if (name || subscription) {
+      await clientRepo.update(user.id, { ...dataClient });
+    }
 
     const updatedClient = await clientRepo.findOneBy({ id: user.id });
 
