@@ -9,34 +9,34 @@ export default class Data {
   @Column({ unique: true })
   cpf: string;
 
-  @Column({ length: 20 })
+  @Column()
   birthday: string;
 
-  @Column({ length: 1 })
+  @Column()
   gender: string;
 
-  @Column({ length: 255 })
+  @Column({ unique: true })
   email: string;
 
   @Column()
   mobile: string;
 
-  @Column({ length: 255 })
+  @Column()
   street: string;
 
   @Column()
-  number: number;
+  number: string;
 
-  @Column({ length: 50 })
+  @Column()
   complement: string;
 
   @Column()
   zip: string;
 
-  @Column({ length: 255 })
+  @Column()
   city: string;
 
-  @Column({ length: 2 })
+  @Column()
   state: string;
 
   constructor() {

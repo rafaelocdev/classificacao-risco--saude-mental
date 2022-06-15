@@ -13,13 +13,13 @@ export default class Employee {
   @PrimaryGeneratedColumn("uuid")
   id?: string;
 
-  @Column({ length: 255 })
+  @Column()
   name: string;
 
   @Column()
   password: string;
 
-  @Column({ length: 50 })
+  @Column({ unique: true })
   register: string;
 
   @Column()
@@ -28,11 +28,10 @@ export default class Employee {
   @Column()
   specialty: string;
 
-  // @ManyToOne(() => Job, (job) => job.employees)
-  // @JoinColumn({ name: "job_id" })
-  // job: Job;
+  @Column({ default: true })
+  isActive: boolean;
 
-  @OneToOne(() => Data)
+  @OneToOne(() => Data, { eager: true, nullable: false })
   @JoinColumn({ name: "data_id" })
   data: Data;
 
