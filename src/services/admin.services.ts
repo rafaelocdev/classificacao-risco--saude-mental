@@ -78,26 +78,53 @@ class AdminService {
       validatedData as IReceivedUserData;
 
     const dataClient = { name, subscription };
-    ///////////////
-    const subscriptionAlreadyRegistered = await clientRepo.findOneBy({
-      subscription: (validated as Client).subscription,
-    });
 
-    const cpfAlreadyRegistered = await dataRepo.findOneBy({
-      cpf: (validated as Client).data.cpf,
-    });
+    if (subscription){
+      const foundSubscription = await clientRepo.findOneBy({
+        subscription: subscription,
+      });
 
-    const emailAlreadyRegistered = await dataRepo.findOneBy({
-      email: (validated as Client).data.email,
-    });
+      if (foundSubscription && foundSubscription.id !== user.id) {
+        throw new ErrorHandler(409, "Subscription already exists.");
+      }
+    }
 
-    if (subscriptionAlreadyRegistered || cpfAlreadyRegistered)
-      throw new ErrorHandler(409, "Client already registered.");
+    if (data) {
+      if (data.cpf) {
+        const foundCpfData = await dataRepo.findOneBy({ cpf: data.cpf });
 
-    if (emailAlreadyRegistered)
-      throw new ErrorHandler(409, "Email already registered.");
-    //////////
-    data && (await dataRepo.update(user.data.id, { ...data }));
+        if (foundCpfData && foundCpfData.id !== user.data.id) {
+          throw new ErrorHandler(409, "CPF already exists.");
+        }
+      }
+
+      if (data.email) {
+        const foundEmailData = await dataRepo.findOneBy({ cpf: data.email });
+
+        if (foundEmailData && foundEmailData.id !== user.data.id) {
+          throw new ErrorHandler(409, "Email already exists.");
+        }
+      }
+      await dataRepo.update(user.data.id, { ...data });
+    }
+    // ///////////////
+
+
+    // const cpfAlreadyRegistered = await dataRepo.findOneBy({
+    //   cpf: (validated as Client).data.cpf,
+    // });
+
+    // const emailAlreadyRegistered = await dataRepo.findOneBy({
+    //   email: (validated as Client).data.email,
+    // });
+
+    // if (subscriptionAlreadyRegistered || cpfAlreadyRegistered)
+    //   throw new ErrorHandler(409, "Client already registered.");
+
+    // if (emailAlreadyRegistered)
+    //   throw new ErrorHandler(409, "Email already registered.");
+    // //////////
+    // data && (await dataRepo.update(user.data.id, { ...data }));
 
     await clientRepo.update(user.id, { ...dataClient });
 
