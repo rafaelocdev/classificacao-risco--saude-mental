@@ -1,10 +1,12 @@
 {
   "name": "capstone",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "author": "Rafael Carvalho <65735479+rafaelocdev@users.noreply.github.com>",
   "scripts": {
     "dev": "ts-node-dev --files --rs src/server.ts",
+    "start": "node dist/src/server.js",
+    "build": "tsc",
     "typeorm": "typeorm-ts-node-commonjs",
     "migration:create": "typeorm-ts-node-commonjs migration:create",
     "migration:generate": "typeorm-ts-node-commonjs migration:generate -d ./src/data-source.ts",

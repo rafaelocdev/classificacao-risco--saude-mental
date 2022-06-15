@@ -1,16 +1,35 @@
 import { Request } from "express";
 import { clientRepo } from "../repositories";
 import { dataRepo } from "../repositories";
+import { employeeRepo } from "../repositories";
 import { Client, Data } from "../entities";
-import { AssertsShape } from "yup/lib/object";
 import { serializedData } from "../schemas";
-import { employeeRepo } from "../repositories"
 import { getAllEmployeesSchema } from "../schemas/admin";
+import { AssertsShape } from "yup/lib/object";
+import { ErrorHandler } from "../errors/errors";
 
 class AdminService {
   registerClient = async ({
     validated,
   }: Request): Promise<AssertsShape<any>> => {
+    const subscriptionAlreadyRegistered = await clientRepo.findOneBy({
+      subscription: (validated as Client).subscription,
+    });
+
+    const cpfAlreadyRegistered = await dataRepo.findOneBy({
+      cpf: (validated as Client).data.cpf,
+    });
+
+    const emailAlreadyRegistered = await dataRepo.findOneBy({
+      email: (validated as Client).data.email,
+    });
+
+    if (subscriptionAlreadyRegistered || cpfAlreadyRegistered)
+      throw new ErrorHandler(409, "Client already registered.");
+
+    if (emailAlreadyRegistered)
+      throw new ErrorHandler(409, "Email already registered.");
+
     const newClient = new Client();
 
     newClient.name = (validated as Client).name;
@@ -41,12 +60,31 @@ class AdminService {
     return serializedData.validate(newClient, { stripUnknown: true });
   };
 
-  getAllEmployees = async () =>{
-      const employees = await employeeRepo.find();
+  getAllEmployees = async () => {
+    const employees = await employeeRepo.find();
 
-      return await getAllEmployeesSchema.validate(employees, {stripUnknown: true});
+    return await getAllEmployeesSchema.validate(employees, {
+      stripUnknown: true,
+    });
+  };
+
+  getClients = async () => {
+    const clients = await clientRepo.find();
+
+    return clients;
+  };
+
+  deleteClient = async (clientId: string) => {
+    const foundUser = await clientRepo.findOneBy({
+      id: clientId,
+    });
+
+    if (!foundUser) throw new ErrorHandler(400, "User not found.");
+
+    await clientRepo.delete(clientId);
+
+    return { message: "User deleted successfully!" };
   };
 }
 
 export default new AdminService();
-
