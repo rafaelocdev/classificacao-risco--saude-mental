@@ -11,7 +11,7 @@ import { ErrorHandler } from "../errors/errors";
 
 interface IReceivedUserData {
   name: string;
-  subscription: number;
+  subscription: string;
   data: object;
 }
 class AdminService {
@@ -78,7 +78,25 @@ class AdminService {
       validatedData as IReceivedUserData;
 
     const dataClient = { name, subscription };
+    ///////////////
+    const subscriptionAlreadyRegistered = await clientRepo.findOneBy({
+      subscription: (validated as Client).subscription,
+    });
 
+    const cpfAlreadyRegistered = await dataRepo.findOneBy({
+      cpf: (validated as Client).data.cpf,
+    });
+
+    const emailAlreadyRegistered = await dataRepo.findOneBy({
+      email: (validated as Client).data.email,
+    });
+
+    if (subscriptionAlreadyRegistered || cpfAlreadyRegistered)
+      throw new ErrorHandler(409, "Client already registered.");
+
+    if (emailAlreadyRegistered)
+      throw new ErrorHandler(409, "Email already registered.");
+    //////////
     data && (await dataRepo.update(user.data.id, { ...data }));
 
     await clientRepo.update(user.id, { ...dataClient });
