@@ -1,4 +1,4 @@
-import { Connection } from "..";
+// import { Connection } from "..";
 import supertest from "supertest";
 import app from "../../app";
 import { DataSource } from "typeorm";
@@ -26,20 +26,6 @@ describe("Register Client | Integration Tests", () => {
   let connection: DataSource;
 
   beforeAll(async () => {
-<<<<<<< Updated upstream
-    dbConnection.create();
-  });
-
-  afterAll(async () => {
-    dbConnection.close();
-  });
-
-  afterEach(async () => {
-    dbConnection.clear();
-  });
-
-  it("should register a new client", async () => {});
-=======
     await AppDataSource.initialize()
       .then((res) => (connection = res))
       .catch((err) => {
@@ -80,5 +66,4 @@ describe("Register Client | Integration Tests", () => {
     expect(response.body.data).toHaveProperty("email");
     expect(response.body.data.email).toStrictEqual(newUserClient.data.email);
   });
->>>>>>> Stashed changes
 });

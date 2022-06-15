@@ -1,6 +1,7 @@
 import * as yup from "yup";
 
-const registerClientSchema = yup.object().shape({
+const serializedClient = yup.object().shape({
+  id: yup.string().uuid().required(),
   name: yup.string().required(),
   subscription: yup.number().required(),
   data: yup.object().shape({
@@ -18,8 +19,8 @@ const registerClientSchema = yup.object().shape({
   }),
 });
 
-const serializedData = yup.object().shape({
-  id: yup.string().required(),
+const serializedClientWithAppointments = yup.object().shape({
+  id: yup.string().uuid().required(),
   name: yup.string().required(),
   subscription: yup.number().required(),
   data: yup.object().shape({
@@ -37,4 +38,4 @@ const serializedData = yup.object().shape({
   }),
 });
 
-export { registerClientSchema, serializedData };
+export { serializedClient, serializedClientWithAppointments };
