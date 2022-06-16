@@ -57,14 +57,6 @@ class AdminService {
     return serializedData.validate(newClient, { stripUnknown: true });
   };
 
-  getAllEmployees = async () => {
-    const employees = await employeeRepo.find();
-
-    return await getAllEmployeesSchema.validate(employees, {
-      stripUnknown: true,
-    });
-  };
-
   getClients = async () => {
     const clients = await clientRepo.find();
 
@@ -81,6 +73,14 @@ class AdminService {
     await clientRepo.delete(clientId);
 
     return { message: "User deleted successfully!" };
+  };
+
+  getAllEmployees = async () => {
+    const employees = await employeeRepo.find();
+
+    return await getAllEmployeesSchema.validate(employees, {
+      stripUnknown: true,
+    });
   };
 }
 
