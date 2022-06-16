@@ -6,9 +6,13 @@ import {
   validateUF,
 } from "validations-br";
 
-const registerClientSchema = yup.object().shape({
+const registerEmployeeSchema = yup.object().shape({
   name: yup.string().required(),
-  subscription: yup.string().required(),
+  password: yup.string().min(6).required(),
+  register: yup.string().required(),
+  job: yup.string().required(),
+  specialty: yup.string().required(),
+  isActive: yup.bool().optional(),
   data: yup.object().shape({
     cpf: yup
       .string()
@@ -38,10 +42,13 @@ const registerClientSchema = yup.object().shape({
   }),
 });
 
-const serializedData = yup.object().shape({
+const serializeEmployeeData = yup.object().shape({
   id: yup.string().required(),
   name: yup.string().required(),
-  subscription: yup.number().required(),
+  register: yup.string().required(),
+  job: yup.string().required(),
+  specialty: yup.string().required(),
+  isActive: yup.bool().optional(),
   data: yup.object().shape({
     id: yup.string().required(),
     cpf: yup.string().required(),
@@ -58,4 +65,4 @@ const serializedData = yup.object().shape({
   }),
 });
 
-export { registerClientSchema, serializedData };
+export { registerEmployeeSchema, serializeEmployeeData };

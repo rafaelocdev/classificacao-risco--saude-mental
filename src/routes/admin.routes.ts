@@ -1,20 +1,28 @@
 import { Router } from "express";
 
-// controllers
 import { adminController } from "../controller";
-
-// middlewares
-import { verifyUserByIdOr404, validateSchema } from "../middlewares";
-import { validateTokenMiddleware } from "../middlewares";
-
-// schemas
-import { registerClientSchema } from "../schemas";
-import { updateClientSchema } from "../schemas";
+import {
+  verifyUserByIdOr404,
+  validateSchema,
+  validateToken,
+  validateIsAdmin,
+} from "../middlewares";
+import {
+  registerClientSchema,
+  registerEmployeeSchema,
+  updateClientSchema,
+} from "../schemas";
 
 const adminRouter = Router();
 
 // Registar funcionarios
-adminRouter.post("/employees/register");
+adminRouter.post(
+  "/employees/register",
+  validateToken,
+  validateIsAdmin,
+  validateSchema(registerEmployeeSchema),
+  adminController.registerEmployee,
+);
 // Listar funcionarios
 adminRouter.get("/employees", adminController.getAllEmployees);
 // Alterar funcionarios
@@ -23,8 +31,10 @@ adminRouter.patch("/employees/:id");
 // Registar clientes
 adminRouter.post(
   "/clients/register",
+  validateToken,
+  validateIsAdmin,
   validateSchema(registerClientSchema),
-  adminController.registerClient
+  adminController.registerClient,
 );
 // Listar clientes
 adminRouter.get("/clients", adminController.getClients);
@@ -34,12 +44,16 @@ adminRouter.patch(
   validateSchema(updateClientSchema),
   // validateTokenMiddleware,
   verifyUserByIdOr404,
-  adminController.updateClient
+  adminController.updateClient,
 );
 
 // Deletar clientes
-// adminRouter.delete("/clients/:id");
-adminRouter.delete("/clients/:clientId", adminController.deleteClient);
+adminRouter.delete(
+  "/clients/:clientId",
+  validateToken,
+  validateIsAdmin,
+  adminController.deleteClient,
+);
 
 // Alterar procedimentos
 adminRouter.get("/procedures/:risk");
