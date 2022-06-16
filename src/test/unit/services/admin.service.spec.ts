@@ -2,35 +2,12 @@ import request from "supertest";
 import supertest from "supertest";
 import { validate } from "uuid";
 import { DataSource } from "typeorm";
-import AppDataSource from "../../data-source";
-import app from "../../app";
-import { dataRepo, employeeRepo } from "../../repositories";
-import { Employee } from "../../entities";
+import AppDataSource from "../../../data-source";
+import app from "../../../app";
+import { dataRepo, employeeRepo } from "../../../repositories";
+import { Employee } from "../../../entities";
 
-const newEmployee: Partial<Employee> = {
-  name: "admin",
-  password: "123456",
-  register: "35648",
-  job: "doctor",
-  specialty: "psychologist",
-  isActive: true,
-};
-
-const dataEmployee = {
-  cpf: "00112233449",
-  birthday: "25/04/1987",
-  gender: "M",
-  email: "admin@admin.com",
-  mobile: "3140263598",
-  street: "rua sem calçamento",
-  number: "9999",
-  complement: "fundos",
-  zip: "35790987",
-  city: "teste",
-  state: "RJ",
-};
-
-const newClient = {
+const newClientOne = {
   name: "Marcos",
   subscription: "9876566565",
   data: {
@@ -48,14 +25,27 @@ const newClient = {
   },
 };
 
-const loginAdm = {
-  email: "admin@admin.com",
-  password: "123456",
+const newClientTwo = {
+  name: "Tiago",
+  subscription: "324688916584",
+  data: {
+    cpf: "54567879254",
+    birthday: "25/06/1989",
+    gender: "M",
+    email: "tiagho@teste.com",
+    mobile: "3240263598",
+    street: "rua sem calçamento",
+    number: "9999",
+    complement: "fundos",
+    zip: "35790987",
+    city: "teste",
+    state: "SP",
+  },
 };
 
 const idNotExisting = "64ee7c40-c8ef-4f6a-bfz5-5fe978a371ef";
 
-describe("Testing the client update route", () => {
+describe("Testing the Admin services | Unit tests", () => {
   let connection: DataSource;
 
   beforeAll(async () => {
@@ -71,18 +61,18 @@ describe("Testing the client update route", () => {
   });
 
   test("Should not be able to update a client using an existing cpf", async () => {
-    const newUserClient = await request(app)
-      .post("/admin/clients/register")
-      .send(newClient);
+    // const newUserClient = await request(app)
+    //   .post("/admin/clients/register")
+    //   .send(newClient);
 
-    const dataAdmin = await dataRepo.save(dataEmployee);
+    // const dataAdmin = await dataRepo.save(dataEmployee);
 
-    newEmployee.data = dataAdmin;
-    const createdAdmin = await employeeRepo.save(newEmployee);
+    // newEmployee.data = dataAdmin;
+    // const createdAdmin = await employeeRepo.save(newEmployee);
 
-    const resp = await request(app).post("/login").send(loginAdm);
+    // const resp = await request(app).post("/login").send(loginAdm);
 
-    console.log(resp.body);
+    // console.log(resp.body);
     // const response = await request(app)
     //   .patch(`/clients/${newUserClient.id}`)
     //   .set("Authorization", `Bearer ${token}`)
