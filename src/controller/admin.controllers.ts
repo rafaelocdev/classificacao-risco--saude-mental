@@ -16,7 +16,6 @@ export class AdminController {
     return res.status(200).json({ clients });
   };
     
-    
   
   deleteClient = async (req: Request, res: Response) => {
     const { clientId } = req.params;

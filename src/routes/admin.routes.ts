@@ -1,8 +1,10 @@
 import { Router } from "express";
+
+// controllers
 import { adminController } from "../controller";
 
 // middlewares
-import { validateSchema } from "../middlewares";
+import { validateIsAdmin, validateSchema, validateToken } from "../middlewares";
 
 // schemas
 import { registerClientSchema } from "../schemas";
@@ -19,6 +21,8 @@ adminRouter.patch("/employees/:employeeId");
 // Registar clientes
 adminRouter.post(
   "/clients/register",
+  validateToken,
+  validateIsAdmin,
   validateSchema(registerClientSchema),
   adminController.registerClient
 );
@@ -27,7 +31,12 @@ adminRouter.get("/clients", adminController.getClients);
 // Alterar clientes
 adminRouter.patch("/clients/:clientId");
 // Deletar clientes
-adminRouter.delete("/clients/:clientId", adminController.deleteClient);
+adminRouter.delete(
+  "/clients/:clientId",
+  validateToken,
+  validateIsAdmin,
+  adminController.deleteClient
+);
 
 // Alterar procedimentos
 adminRouter.get("/procedures/:risk");

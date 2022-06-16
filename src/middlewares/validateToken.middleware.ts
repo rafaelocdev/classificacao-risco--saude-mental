@@ -1,15 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload, VerifyErrors } from "jsonwebtoken";
 import { Employee } from "../entities";
+import { ErrorHandler } from "../errors/errors";
 
-const validateTokenMiddleware = (
-  req: Request,
-  _: Response,
-  next: NextFunction
-) => {
+const validateToken = (req: Request, _: Response, next: NextFunction) => {
   const token = req.headers.authorization?.split(" ")[1];
 
-  if (!token) throw new Error("Jwt not found.");
+  if (!token) throw new ErrorHandler(400, "Jwt not found.");
 
   return jwt.verify(
     token,
@@ -24,4 +21,4 @@ const validateTokenMiddleware = (
   );
 };
 
-export default validateTokenMiddleware;
+export default validateToken;
