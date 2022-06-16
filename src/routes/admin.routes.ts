@@ -7,12 +7,18 @@ import { adminController } from "../controller";
 import { validateIsAdmin, validateSchema, validateToken } from "../middlewares";
 
 // schemas
-import { registerClientSchema } from "../schemas";
+import { registerClientSchema, registerEmployeeSchema } from "../schemas";
 
 const adminRouter = Router();
 
 // Registar funcionarios
-adminRouter.post("/employees/register");
+adminRouter.post(
+  "/employees/register",
+  validateToken,
+  validateIsAdmin,
+  validateSchema(registerEmployeeSchema),
+  adminController.registerEmployee
+);
 // Listar funcionarios
 adminRouter.get("/employees", adminController.getAllEmployees);
 // Alterar funcionarios

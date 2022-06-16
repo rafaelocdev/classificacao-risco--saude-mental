@@ -1,3 +1,7 @@
 import getAllEmployeesSchema from "./getAllEmployees.schema";
+import {
+  registerEmployeeSchema,
+  serializeEmployeeData,
+} from "./registerEmployee.schema";
 
-export {getAllEmployeesSchema};
+export { registerEmployeeSchema, serializeEmployeeData, getAllEmployeesSchema };
