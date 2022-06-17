@@ -1,11 +1,10 @@
-import request from "supertest";
-import supertest from "supertest";
 import { validate } from "uuid";
+import { Request } from "express";
 import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
-import app from "../../../app";
-import { dataRepo, employeeRepo } from "../../../repositories";
-import { Employee } from "../../../entities";
+import { adminService } from "../../../services";
+import { ErrorHandler, errorHandler } from "../../../errors/errors";
+import { clientRepo } from "../../../repositories";
 
 const newClientOne = {
   name: "Marcos",
@@ -43,7 +42,26 @@ const newClientTwo = {
   },
 };
 
-const idNotExisting = "64ee7c40-c8ef-4f6a-bfz5-5fe978a371ef";
+const newClientData = {
+  name: "Marcos",
+  subscription: "9876566587",
+  data: {
+    cpf: "65465785111",
+    birthday: "25/01/1989",
+    gender: "M",
+    email: "marcos2@teste.com",
+    mobile: "3240263598",
+    street: "rua sem calçamento",
+    number: "9999",
+    complement: "fundos",
+    zip: "35790987",
+    city: "teste",
+    state: "SP",
+  },
+};
+
+let idClient1 = "";
+let idClient2 = "";
 
 describe("Testing the Admin services | Unit tests", () => {
   let connection: DataSource;
@@ -60,54 +78,73 @@ describe("Testing the Admin services | Unit tests", () => {
     await connection.destroy();
   });
 
-  test("Should not be able to update a client using an existing cpf", async () => {
-    // const newUserClient = await request(app)
-    //   .post("/admin/clients/register")
-    //   .send(newClient);
+  test("Should not be able to update a client using an existing CPF", async () => {
+    try {
+      const createdClient1 = await adminService.registerClient({
+        validated: newClientOne,
+      } as Request);
+      idClient1 = createdClient1.id;
 
-    // const dataAdmin = await dataRepo.save(dataEmployee);
+      const createdClient2 = await adminService.registerClient({
+        validated: newClientTwo,
+      } as Request);
+      idClient2 = createdClient2.id;
 
-    // newEmployee.data = dataAdmin;
-    // const createdAdmin = await employeeRepo.save(newEmployee);
-
-    // const resp = await request(app).post("/login").send(loginAdm);
-
-    // console.log(resp.body);
-    // const response = await request(app)
-    //   .patch(`/clients/${newUserClient.id}`)
-    //   .set("Authorization", `Bearer ${token}`)
-    //   .send({ cpf: 35634556815 });
-    // expect(response.status).toBe(409);
-    // expect(response.body.message).toStrictEqual("CPF already exists");
-    expect(false).toBe(false);
+      const returnUpdateClient: any = await adminService.updateClient({
+        validated: { data: { cpf: newClientTwo.data.cpf } },
+        user: createdClient1,
+      } as Request);
+    } catch (err) {
+      expect(err).toBeInstanceOf(ErrorHandler);
+      expect(err.statusCode).toBe(409);
+      expect(err.message).toBe("CPF already exists.");
+      expect(errorHandler).toThrow();
+    }
   });
 
-  //   test("Should not be able to update a client with out authorization token", async () => {
-  //     // const response = await request(app)
-  //     //   .patch(`/clients/${newUserClient.id}`)
-  //     //   .send({ newDataUserClient });
-  //     // expect(response.status).toBe(400);
-  //     // expect(response.body.message).toStrictEqual("Missing authorization token.");
-  //   });
+  test("Should not be able to update a client using an existing subscription", async () => {
+    try {
+      const foundClient = await clientRepo.findOneBy({ id: idClient1 });
 
-  //   test("Should not be able to update a not existing client", async () => {
-  //     // const response = await request(app)
-  //     //   .patch(`/clients/${idNotExisting}`)
-  //     //   .set("Authorization", `Bearer ${token}`)
-  //     //   .send({ cpf: 35634556815 });
-  //     // expect(response.status).toBe(404);
-  //     // expect(response.body.message).toStrictEqual("User not found");
-  //   });
+      const returnUpdateClient: any = await adminService.updateClient({
+        validated: { subscription: newClientTwo.subscription },
+        user: foundClient,
+      } as Request);
+    } catch (err) {
+      expect(err).toBeInstanceOf(ErrorHandler);
+      expect(err.statusCode).toBe(409);
+      expect(err.message).toBe("Subscription already exists.");
+      expect(errorHandler).toThrow();
+    }
+  });
 
-  //   test("Should be able to update a client with authorization token", async () => {
-  //     // const response = await request(app)
-  //     //   .patch(`/clients/${newUserClient.id}`)
-  //     //   .set("Authorization", `Bearer ${token}`)
-  //     //   .send({ ...newDataUserClient });
-  //     // expect(response.status).toBe(200);
-  //     // expect(response.body.id).toBeDefined();
-  //     // expect(validate(response.body.id)).toBeTruthy();
-  //     // expect(response.body.data).toHaveProperty("cpf");
-  //     // expect(response.body.data.cpf).toStrictEqual(newDataUserClient.data.cpf);
-  //   });
+  test("Should not be able to update a client using an existing email", async () => {
+    try {
+      const foundClient = await clientRepo.findOneBy({ id: idClient1 });
+
+      const returnUpdateClient: any = await adminService.updateClient({
+        validated: { data: { email: newClientTwo.data.email } },
+        user: foundClient,
+      } as Request);
+    } catch (err) {
+      expect(err).toBeInstanceOf(ErrorHandler);
+      expect(err.statusCode).toBe(409);
+      expect(err.message).toBe("Email already exists.");
+      expect(errorHandler).toThrow();
+    }
+  });
+
+  test("Should be able to update a client using not existing data", async () => {
+    const foundClient = await clientRepo.findOneBy({ id: idClient1 });
+
+    const returnUpdateClient: any = await adminService.updateClient({
+      validated: newClientData,
+      user: foundClient,
+    } as Request);
+
+    expect(returnUpdateClient.id).toBeDefined();
+    expect(validate(returnUpdateClient.id)).toBeTruthy();
+    expect(returnUpdateClient.data).toHaveProperty("cpf");
+    expect(returnUpdateClient.data.cpf).toStrictEqual(newClientData.data.cpf);
+  });
 });
