@@ -109,7 +109,7 @@ class AdminService {
       }
 
       if (data.email) {
-        const foundEmailData = await dataRepo.findOneBy({ cpf: data.email });
+        const foundEmailData = await dataRepo.findOneBy({ email: data.email });
 
         if (foundEmailData && foundEmailData.id !== user.data.id) {
           throw new ErrorHandler(409, "Email already exists.");
@@ -171,7 +171,7 @@ class AdminService {
 
     const hashedPassword = await bcrypt.hash(
       (validated as Employee).password,
-      10,
+      10
     );
 
     const newEmployeeData = new Data();

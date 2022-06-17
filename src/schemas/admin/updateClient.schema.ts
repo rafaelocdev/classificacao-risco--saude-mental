@@ -1,4 +1,10 @@
 import * as yup from "yup";
+import {
+  validateCPF,
+  validatePhone,
+  validateCep,
+  validateUF,
+} from "validations-br";
 
 const updateClientSchema = yup.object().shape({
   name: yup.string().optional(),
@@ -14,11 +20,7 @@ const updateClientSchema = yup.object().shape({
             is: (value) => value?.length,
             then: yup
               .string()
-              .test(
-                "len",
-                "O CPF deve ter exatamente 11 caracteres",
-                (val) => val.toString().length === 11
-              ),
+              .test("is-cpf", "CPF is not valid", (cpf) => validateCPF(cpf)),
           }),
         birthday: yup.string().optional(),
         gender: yup
@@ -30,15 +32,33 @@ const updateClientSchema = yup.object().shape({
               .string()
               .oneOf(
                 ["M", "F", "O"],
-                "Para 'gênero' somente são aceitos os valores: M ('Masculino'), F ('Feminino') ou O ('Outro')"
+                "For 'gender' only the values M ('Male'), F ('Female') or O ('Other') are accepted."
               ),
           }),
         email: yup.string().email().lowercase().optional(),
-        mobile: yup.string().optional(),
+        mobile: yup
+          .string()
+          .optional()
+          .when("mobile", {
+            is: (value) => value?.length,
+            then: yup
+              .string()
+              .test("is-phone", "Phone number is not valid", (phone) =>
+                validatePhone(phone)
+              ),
+          }),
         street: yup.string().optional(),
         number: yup.string().optional(),
         complement: yup.string().optional(),
-        zip: yup.string().optional(),
+        zip: yup
+          .string()
+          .optional()
+          .when("zip", {
+            is: (value) => value?.length,
+            then: yup
+              .string()
+              .test("is-cep", "CEP is not valid", (cep) => validateCep(cep)),
+          }),
         city: yup.string().optional(),
         state: yup
           .string()
@@ -47,17 +67,15 @@ const updateClientSchema = yup.object().shape({
             is: (value) => value?.length,
             then: yup
               .string()
-              .test(
-                "len",
-                "O estado deve ter exatamente 2 caracteres",
-                (val) => val.toString().length === 2
-              ),
+              .test("is-uf", "UF is not valid", (uf) => validateUF(uf)),
           }),
       },
       [
         ["state", "state"],
         ["gender", "gender"],
         ["cpf", "cpf"],
+        ["zip", "zip"],
+        ["mobile", "mobile"],
       ]
     )
     .default(undefined),
