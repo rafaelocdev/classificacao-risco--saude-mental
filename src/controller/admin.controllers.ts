@@ -11,7 +11,7 @@ class AdminController {
   getClients = async (_: Request, res: Response) => {
     const clients = await adminService.getClients();
 
-    return res.status(200).json({ clients });
+    return res.status(200).json(clients);
   };
 
   updateClient = async (req: Request, res: Response) => {
@@ -37,6 +37,12 @@ class AdminController {
     const employees = await adminService.getAllEmployees();
 
     return res.status(200).json({ employees });
+  };
+
+  getProcedure = async (req: Request, res: Response) => {
+    const risk = await adminService.getProcedure(req);
+
+    return res.status(200).json(risk);
   };
 }
 

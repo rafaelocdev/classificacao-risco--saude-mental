@@ -2,7 +2,12 @@ import { Request } from "express";
 import { AssertsShape } from "yup/lib/object";
 import bcrypt from "bcrypt";
 
-import { employeeRepo, clientRepo, dataRepo } from "../repositories";
+import {
+  employeeRepo,
+  clientRepo,
+  dataRepo,
+  resultMhRiskRepo,
+} from "../repositories";
 import { Client, Data, Employee } from "../entities";
 import {
   serializedData,
@@ -212,6 +217,15 @@ class AdminService {
     return await getAllEmployeesSchema.validate(employees, {
       stripUnknown: true,
     });
+  };
+
+  getProcedure = async ({ params }: Request) => {
+    try {
+      const procedure = await resultMhRiskRepo.findOneBy(params);
+      return procedure.procedure;
+    } catch {
+      throw new ErrorHandler(400, "Risk does not exist.");
+    }
   };
 }
 

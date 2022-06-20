@@ -23,8 +23,10 @@ adminRouter.post(
   validateSchema(registerEmployeeSchema),
   adminController.registerEmployee
 );
+
 // Listar funcionarios
 adminRouter.get("/employees", adminController.getAllEmployees);
+
 // Alterar funcionarios
 adminRouter.patch("/employees/:id");
 
@@ -36,8 +38,10 @@ adminRouter.post(
   validateSchema(registerClientSchema),
   adminController.registerClient
 );
+
 // Listar clientes
 adminRouter.get("/clients", adminController.getClients);
+
 // Alterar clientes
 adminRouter.patch(
   "/clients/:id",
@@ -56,7 +60,7 @@ adminRouter.delete(
   adminController.deleteClient
 );
 
-// Alterar procedimentos
-adminRouter.get("/procedures/:risk");
+// Listar procedimentos
+adminRouter.get("/procedures/:risk", adminController.getProcedure);
 
 export default adminRouter;
