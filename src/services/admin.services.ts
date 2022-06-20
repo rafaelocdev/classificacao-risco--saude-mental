@@ -1,6 +1,7 @@
 import { Request } from "express";
 import { AssertsShape } from "yup/lib/object";
 import bcrypt from "bcrypt";
+import * as uuid from "uuid";
 
 import { employeeRepo, clientRepo, dataRepo } from "../repositories";
 import { Client, Data, Employee } from "../entities";
@@ -10,7 +11,7 @@ import {
   getAllEmployeesSchema,
   serializeEmployeeData,
 } from "../schemas";
-import { ErrorHandler } from "../errors/errors";
+import { errorHandler, ErrorHandler } from "../errors/errors";
 
 interface IReceivedUserData {
   name: string;
@@ -204,6 +205,86 @@ class AdminService {
     return await serializeEmployeeData.validate(newEmployee, {
       stripUnknown: true,
     });
+  };
+
+  updateEmployee = async ({ body, params }: Request) => {
+    const { id } = params;
+
+    const employee = await employeeRepo.findOneBy({ id });
+
+    if (!employee) throw new ErrorHandler(401, "Employee not found.");
+
+    let { password, register, job, specialty, isActive, data } = body;
+
+    if (password) {
+      const hashedPwd = await bcrypt.hash(password, 10);
+      password = hashedPwd;
+    }
+
+    if (register) {
+      const registerAlreadyExists = await employeeRepo.findOneBy({
+        register,
+      });
+
+      if (registerAlreadyExists)
+        throw new ErrorHandler(409, "Register number already exists.");
+    }
+
+    if (job) {
+      const ALLOWED_JOBS = ["Médico(a)", "Enfermeiro(a)", "Administrador(a)"];
+
+      if (!ALLOWED_JOBS.includes(job))
+        throw new ErrorHandler(409, {
+          error: "Job not allowed",
+          allowed_values: ALLOWED_JOBS,
+        });
+    }
+
+    if (specialty) {
+      const ALLOWED_SPECIALTIES = ["Psiquiatra", "Atendente", "Admin"];
+
+      if (!ALLOWED_SPECIALTIES.includes(specialty))
+        throw new ErrorHandler(409, {
+          error: "Specialty not allowed",
+          allowed_values: ALLOWED_SPECIALTIES,
+        });
+    }
+
+    if (isActive) {
+      if (typeof isActive !== "boolean")
+        throw new ErrorHandler(409, "Only boolean types are allowed");
+    }
+
+    if (data) {
+      if (data.cpf) {
+        const cpfAlreadyRegistered = await dataRepo.findOneBy({
+          cpf: data.cpf,
+        });
+
+        if (cpfAlreadyRegistered)
+          throw new ErrorHandler(409, "CPF already registered.");
+      }
+
+      if (data.email) {
+        const emailAlreadyRegistered = await dataRepo.findOneBy({
+          email: data.email,
+        });
+
+        if (emailAlreadyRegistered)
+          throw new ErrorHandler(409, "Email already registered.");
+      }
+
+      await dataRepo.update(employee.data.id, { ...data });
+    }
+
+    const employeeData = { ...body };
+    if (employeeData.data) delete employeeData.data;
+
+    await employeeRepo.update(employee.id, {
+      ...employeeData,
+    });
+
+    return "ok";
   };
 
   getAllEmployees = async () => {
