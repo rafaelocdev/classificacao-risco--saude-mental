@@ -1,4 +1,4 @@
-import mailerService from "../../services/mailer.service";
+import mailerService from "../../../services/mailer.service";
 
 describe("Send mail service", () => {
   test("Should be able to send a welcome email", async () => {

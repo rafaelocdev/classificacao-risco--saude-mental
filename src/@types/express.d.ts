@@ -5,6 +5,9 @@ declare global {
   namespace Express {
     interface Request {
       decoded: Partial<Employee>;
+
+      user: Partial<Client | Employee>;
+
       validated: Client | Data | Employee;
     }
   }

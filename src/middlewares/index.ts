@@ -1,5 +1,6 @@
-import validateTokenMiddleware from "./validateToken.middleware";
+import validateToken from "./validateToken.middleware";
 import validateSchema from "./validateSchema.middleware";
 import validateIsAdmin from "./validateIsAdmin.middleware";
+import verifyUserByIdOr404 from "./verifyUserByIdOr404.middleware";
 
-export { validateTokenMiddleware, validateSchema, validateIsAdmin };
+export { validateToken, validateSchema, validateIsAdmin, verifyUserByIdOr404 };

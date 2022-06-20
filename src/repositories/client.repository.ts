@@ -18,7 +18,7 @@ class ClientRepo implements IDataRepo {
   }
 
   public save = async (data: Partial<Client>) => await this.ormRepo.save(data);
-  public find = async () => this.ormRepo.find();
+  public find = async () => await this.ormRepo.find();
   public findOneBy = async (payload: object) =>
     await this.ormRepo.findOneBy({ ...payload });
   public update = async (id: string, payload: Partial<Client>) =>
