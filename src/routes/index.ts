@@ -13,7 +13,7 @@ const registerRoutes = (app: Express) => {
   // all invalid routes fall into this
   app.all("*", (_: Request, res: Response) => {
     return res.status(404).json({
-      message: "Not found",
+      error: "Not found.",
     });
   });
 };
