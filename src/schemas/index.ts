@@ -6,6 +6,7 @@ import {
   serializedData,
   serializedUpdatedClientSchema,
   updateClientSchema,
+  updateEmployeeSchema,
 } from "./admin";
 import { serializedClient, serializedClientWithAppointments } from "./doctor";
 import { loginSchema } from "./login";
@@ -21,4 +22,5 @@ export {
   serializedClient,
   serializedClientWithAppointments,
   loginSchema,
+  updateEmployeeSchema,
 };
