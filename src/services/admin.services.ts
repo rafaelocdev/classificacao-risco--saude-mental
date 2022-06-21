@@ -1,7 +1,6 @@
 import { Request } from "express";
 import { AssertsShape } from "yup/lib/object";
 import bcrypt from "bcrypt";
-import * as uuid from "uuid";
 
 import { employeeRepo, clientRepo, dataRepo } from "../repositories";
 import { Client, Data, Employee } from "../entities";
@@ -11,7 +10,8 @@ import {
   getAllEmployeesSchema,
   serializeEmployeeData,
 } from "../schemas";
-import { errorHandler, ErrorHandler } from "../errors/errors";
+import { ErrorHandler } from "../errors/errors";
+import { serializedUpdatedEmployeeSchema } from "../schemas/admin";
 
 interface IReceivedUserData {
   name: string;
@@ -207,18 +207,20 @@ class AdminService {
     });
   };
 
-  updateEmployee = async ({ body, params }: Request) => {
+  updateEmployee = async ({
+    params,
+    validated,
+  }: Request): Promise<AssertsShape<any>> => {
     const { id } = params;
 
     const employee = await employeeRepo.findOneBy({ id });
 
-    if (!employee) throw new ErrorHandler(401, "Employee not found.");
-
-    let { password, register, job, specialty, isActive, data } = body;
+    let { name, password, register, job, specialty, isActive, data } =
+      validated as Partial<Employee>;
 
     if (password) {
       const hashedPwd = await bcrypt.hash(password, 10);
-      password = hashedPwd;
+      (validated as Partial<Employee>).password = hashedPwd;
     }
 
     if (register) {
@@ -277,14 +279,21 @@ class AdminService {
       await dataRepo.update(employee.data.id, { ...data });
     }
 
-    const employeeData = { ...body };
-    if (employeeData.data) delete employeeData.data;
+    if (name || password || register || job || specialty || isActive) {
+      const employeeData: Partial<Employee> = { ...validated };
 
-    await employeeRepo.update(employee.id, {
-      ...employeeData,
+      if (employeeData.data) delete employeeData.data;
+
+      await employeeRepo.update(employee.id, {
+        ...employeeData,
+      });
+    }
+
+    const updatedEmployee = await employeeRepo.findOneBy({ id });
+
+    return await serializedUpdatedEmployeeSchema.validate(updatedEmployee, {
+      stripUnknown: true,
     });
-
-    return "ok";
   };
 
   getAllEmployees = async () => {

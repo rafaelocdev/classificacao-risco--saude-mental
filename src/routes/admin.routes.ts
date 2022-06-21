@@ -11,6 +11,7 @@ import {
   registerClientSchema,
   registerEmployeeSchema,
   updateClientSchema,
+  updateEmployeeSchema,
 } from "../schemas";
 
 const adminRouter = Router();
@@ -32,7 +33,7 @@ adminRouter.patch(
   "/employees/:id",
   validateToken,
   validateIsAdmin,
-  // validateSchema(updateClientSchema),
+  validateSchema(updateEmployeeSchema),
   verifyUserByIdOr404,
   adminController.updateEmployee
 );
