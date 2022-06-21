@@ -50,4 +50,6 @@ export default class DoctorService {
       stripUnknown: true,
     });
   };
+
+  finishAppointment = async ({ appointment }: Request) => {};
 }
