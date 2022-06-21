@@ -3,4 +3,10 @@ import {
   serializedClientWithAppointments,
 } from "./getClientById.schema";
 
-export { serializedClient, serializedClientWithAppointments };
+import { serializeOnDutySchema } from "./onDuty.schema";
+
+export {
+  serializedClient,
+  serializedClientWithAppointments,
+  serializeOnDutySchema,
+};

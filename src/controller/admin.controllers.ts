@@ -38,6 +38,11 @@ class AdminController {
 
     return res.status(200).json({ employees });
   };
+
+  getAllOnDuty = async (_: Request, res: Response) => {
+    const onDuty = await adminService.getAllOnDuty();
+    res.status(200).json({ onDuty });
+  };
 }
 
 export default new AdminController();

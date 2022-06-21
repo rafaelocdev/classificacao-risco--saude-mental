@@ -2,8 +2,13 @@ import { Request } from "express";
 import { AssertsShape } from "yup/lib/object";
 import bcrypt from "bcrypt";
 
-import { employeeRepo, clientRepo, dataRepo } from "../repositories";
-import { Client, Data, Employee } from "../entities";
+import {
+  employeeRepo,
+  clientRepo,
+  dataRepo,
+  onDutyRepo,
+} from "../repositories";
+import { Client, Data, Employee, OnDuty } from "../entities";
 import {
   serializedData,
   serializedUpdatedClientSchema,
@@ -201,6 +206,8 @@ class AdminService {
 
     await employeeRepo.save(newEmployee);
 
+    await this.registerOnDuty(newEmployee);
+
     return await serializeEmployeeData.validate(newEmployee, {
       stripUnknown: true,
     });
@@ -212,6 +219,18 @@ class AdminService {
     return await getAllEmployeesSchema.validate(employees, {
       stripUnknown: true,
     });
+  };
+
+  registerOnDuty = async (employee: Employee) => {
+    if (employee.job === "Médico(a)") {
+      const newOnDuty = new OnDuty();
+      newOnDuty.employee = employee;
+      await onDutyRepo.save(newOnDuty);
+    }
+  };
+
+  getAllOnDuty = async () => {
+    return await onDutyRepo.findAll();
   };
 }
 

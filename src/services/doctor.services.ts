@@ -1,14 +1,20 @@
 import { Request } from "express";
-import { Appointment, Client, QueryMhRisk } from "../entities";
+import { Appointment, Client, Employee, QueryMhRisk } from "../entities";
 import { ErrorHandler } from "../errors/errors";
 import {
   appointmentRepo,
   clientRepo,
   dataRepo,
+  onDutyRepo,
   queryMhRiskRepo,
 } from "../repositories";
 import * as uuid from "uuid";
-import { serializedClient, serializedClientWithAppointments } from "../schemas";
+import {
+  serializedClient,
+  serializedClientWithAppointments,
+  serializeOnDutySchema,
+} from "../schemas";
+import { validate } from "uuid";
 
 interface IClientById {
   client: Client;
@@ -16,7 +22,7 @@ interface IClientById {
   appointment: Partial<Appointment>;
 }
 
-export default class DoctorService {
+class DoctorService {
   getClientById = async ({ params }: Request) => {
     const { clientId } = params;
 
@@ -52,4 +58,22 @@ export default class DoctorService {
   };
 
   finishAppointment = async ({ appointment }: Request) => {};
+
+  startAppointment = async ({ decoded, appointment }: Request) => {
+    const { id } = decoded;
+
+    appointment.onDuty = await onDutyRepo.findOne({
+      employee: { id } as Employee,
+    });
+
+    const updatedAppointment = await appointmentRepo.update(appointment.id, {
+      ...appointment,
+    });
+
+    return await serializeOnDutySchema.validate(updatedAppointment, {
+      stripUnknown: true,
+    });
+  };
 }
+
+export default new DoctorService();
