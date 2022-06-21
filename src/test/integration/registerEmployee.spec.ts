@@ -102,7 +102,7 @@ describe("Register employee route | Integration Test", () => {
     );
   });
 
-  it("Should return an error message with status code 400", async () => {
+  it("Should return an error message with status code 400 due to missing required data", async () => {
     const response = await supertest(app)
       .post("/admin/employees/register")
       .set("Authorization", `Bearer ${token}`)
