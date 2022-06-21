@@ -10,6 +10,10 @@ import {
 } from "./admin";
 import { serializedClient, serializedClientWithAppointments } from "./doctor";
 import { loginSchema } from "./login";
+import {
+  createQueryMhRiskSchema,
+  serializedQueryMhRiskSchema,
+} from "./nurse/queryMhRisk.schema";
 
 export {
   getAllEmployeesSchema,
@@ -22,5 +26,7 @@ export {
   serializedClient,
   serializedClientWithAppointments,
   loginSchema,
+  createQueryMhRiskSchema,
+  serializedQueryMhRiskSchema,
   updateEmployeeSchema,
 };
