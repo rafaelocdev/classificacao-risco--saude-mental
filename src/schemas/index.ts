@@ -14,6 +14,10 @@ import {
   serializeOnDutySchema,
 } from "./doctor";
 import { loginSchema } from "./login";
+import {
+  createQueryMhRiskSchema,
+  serializedQueryMhRiskSchema,
+} from "./nurse/queryMhRisk.schema";
 
 export {
   getAllEmployeesSchema,
@@ -27,5 +31,7 @@ export {
   serializedClientWithAppointments,
   loginSchema,
   serializeOnDutySchema,
+  createQueryMhRiskSchema,
+  serializedQueryMhRiskSchema,
   updateEmployeeSchema,
 };
