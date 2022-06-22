@@ -83,14 +83,38 @@ class DoctorService {
       id: appointment.id,
     });
 
-    const { onDuty, ...response } = updatedAppointment;
+    const {
+      action,
+      anamnesis,
+      id: appointmentId,
+      queryMhRisk,
+    } = updatedAppointment;
 
-    // return await serializeAppointmentSchema.validate(
-    //   { ...updatedAppointment },
-    //   {
-    //     stripUnknown: true,
-    //   },
-    // );
+    const response = {
+      appointment: {
+        query_mh_risk: {
+          resultMhRisk: queryMhRisk.resultMhRisk.risk,
+          evaluation_ate: queryMhRisk.evaluationDate,
+          family_support: queryMhRisk.familySupport,
+          mourning: queryMhRisk.mourning,
+          drugs: queryMhRisk.drugs,
+          insomnia: queryMhRisk.insomnia,
+          self_aggression: queryMhRisk.selfAggression,
+          id: queryMhRisk.id,
+        },
+        doctor: {
+          id: id,
+          name: foundOnDuty.employee.name,
+          specialty: foundOnDuty.employee.specialty,
+        },
+        action: action,
+        anamnesis: anamnesis,
+        id: appointmentId,
+      },
+      subscription: (await queryMhRisk.client).subscription,
+      client: (await queryMhRisk.client).name,
+      id: (await queryMhRisk.client).id,
+    };
 
     return response;
   };

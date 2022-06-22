@@ -36,7 +36,7 @@ export default class QueryMhRisk {
   @CreateDateColumn({ name: "evaluation_date" })
   evaluationDate?: Date;
 
-  @ManyToOne(() => Client, (client) => client.queriesMhRisk)
+  @ManyToOne(() => Client, (client) => client.queriesMhRisk, { lazy: true })
   @JoinColumn({ name: "client_id" })
   client: Client;
 

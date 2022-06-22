@@ -17,7 +17,9 @@ class DoctorController {
   appointmentStart = async (req: Request, res: Response) => {
     const startedAppointment = await doctorService.startAppointment(req);
 
-    return res.status(201).json({ appointment: startedAppointment });
+    console.log(startedAppointment);
+
+    return res.status(201).json({ ...startedAppointment });
   };
 }
 
