@@ -68,8 +68,8 @@ adminRouter.delete(
   adminController.deleteClient,
 );
 
-// Alterar procedimentos
-adminRouter.get("/procedures/:risk");
+// Listar procedimentos
+adminRouter.get("/procedures/:risk", adminController.getProcedure);
 
 // Listar todos onDuty
 // adminRouter.get(

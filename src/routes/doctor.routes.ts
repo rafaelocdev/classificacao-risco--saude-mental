@@ -16,7 +16,7 @@ const doctorRouter = Router();
 doctorRouter.get("/clients/:clientId", doctorController.getClientById);
 
 // Buscar appointments -> considerar possibilidades de filtros para appointments não iniciados, em andamento e finalizados
-doctorRouter.get("/appointments");
+doctorRouter.get("/appointments", doctorController.getAppointments);
 
 // Inicia atendimento -> patch com on_duty_id -> Modificar on_duty para true
 // Validar campos com schema específico

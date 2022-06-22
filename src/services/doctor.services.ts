@@ -22,6 +22,12 @@ interface IClientById {
 }
 
 class DoctorService {
+  getAppointments = async () => {
+    const appointments = await appointmentRepo.listAll();
+
+    return appointments;
+  };
+
   getClientById = async ({ params }: Request) => {
     const { clientId } = params;
 

@@ -6,6 +6,7 @@ import {
   employeeRepo,
   clientRepo,
   dataRepo,
+  resultMhRiskRepo,
   onDutyRepo,
 } from "../repositories";
 import { Client, Data, Employee, OnDuty } from "../entities";
@@ -177,7 +178,7 @@ class AdminService {
 
     const hashedPassword = await bcrypt.hash(
       (validated as Employee).password,
-      10
+      10,
     );
 
     const newEmployeeData = new Data();
@@ -321,6 +322,15 @@ class AdminService {
 
   getAllOnDuty = async () => {
     return await onDutyRepo.findAll();
+  };
+
+  getProcedure = async ({ params }: Request) => {
+    try {
+      const procedure = await resultMhRiskRepo.findOneBy(params);
+      return procedure.procedure;
+    } catch {
+      throw new ErrorHandler(400, "Risk does not exist.");
+    }
   };
 }
 
