@@ -9,6 +9,10 @@ import {
 } from "./admin";
 import { serializedClient, serializedClientWithAppointments } from "./doctor";
 import { loginSchema } from "./login";
+import {
+  finishAppointmentSchema,
+  serializedFinishedAppointmentSchema,
+} from "./doctor";
 
 export {
   getAllEmployeesSchema,
@@ -21,4 +25,6 @@ export {
   serializedClient,
   serializedClientWithAppointments,
   loginSchema,
+  finishAppointmentSchema,
+  serializedFinishedAppointmentSchema,
 };
