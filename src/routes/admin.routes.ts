@@ -11,6 +11,7 @@ import {
   registerClientSchema,
   registerEmployeeSchema,
   updateClientSchema,
+  updateEmployeeSchema,
 } from "../schemas";
 
 const adminRouter = Router();
@@ -28,7 +29,14 @@ adminRouter.post(
 adminRouter.get("/employees", adminController.getAllEmployees);
 
 // Alterar funcionarios
-adminRouter.patch("/employees/:id");
+adminRouter.patch(
+  "/employees/:id",
+  validateToken,
+  validateIsAdmin,
+  validateSchema(updateEmployeeSchema),
+  verifyUserByIdOr404,
+  adminController.updateEmployee
+);
 
 // Registar clientes
 adminRouter.post(

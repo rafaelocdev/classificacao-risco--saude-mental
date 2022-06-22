@@ -7,6 +7,10 @@ import {
   registerEmployeeSchema,
   serializeEmployeeData,
 } from "./registerEmployee.schema";
+import {
+  updateEmployeeSchema,
+  serializedUpdatedEmployeeSchema,
+} from "./updateEmployee.schema";
 
 export {
   getAllEmployeesSchema,
@@ -16,4 +20,6 @@ export {
   registerClientSchema,
   registerEmployeeSchema,
   serializeEmployeeData,
+  updateEmployeeSchema,
+  serializedUpdatedEmployeeSchema,
 };

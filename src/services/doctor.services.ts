@@ -56,6 +56,8 @@ class DoctorService {
       stripUnknown: true,
     });
   };
+
+  finishAppointment = async ({ appointment }: Request) => {};
 }
 
 export default new DoctorService();

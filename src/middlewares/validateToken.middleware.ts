@@ -12,7 +12,7 @@ const validateToken = (req: Request, _: Response, next: NextFunction) => {
     token,
     process.env.SECRET_KEY,
     (err: VerifyErrors, decoded: JwtPayload) => {
-      if (err) throw new Error(err.message);
+      if (err) throw new ErrorHandler(400, "Jwt expired");
 
       req.decoded = decoded as Partial<Employee>;
 

@@ -33,6 +33,12 @@ class AdminController {
     return res.status(201).json(newEmployee);
   };
 
+  updateEmployee = async (req: Request, res: Response) => {
+    const updatedEmployee = await adminService.updateEmployee(req);
+
+    return res.status(200).json(updatedEmployee);
+  };
+
   getAllEmployees = async (_: Request, res: Response) => {
     const employees = await adminService.getAllEmployees();
 

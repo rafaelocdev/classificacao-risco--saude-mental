@@ -1,5 +1,5 @@
 import express from "express";
-import { Client, Data, Employee } from "../entities";
+import { Client, Data, Employee, QueryMhRisk, Appointment } from "../entities";
 
 declare global {
   namespace Express {
@@ -8,7 +8,7 @@ declare global {
 
       user: Partial<Client | Employee>;
 
-      validated: Client | Data | Employee;
+      validated: Client | Data | Employee | QueryMhRisk;
     }
   }
 }

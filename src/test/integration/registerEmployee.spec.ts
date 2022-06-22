@@ -30,26 +30,32 @@ const adminCredentials = {
   password: "admin",
 };
 
-const validClientData = {
+const validEmployeeData = {
   name: "John Doe",
-  subscription: "543219376",
+  password: "123456",
+  register: "123",
+  job: "Médico(a)",
+  specialty: "Psiquiatra",
   data: {
-    cpf: "216.983.050-28",
+    cpf: "551.616.510-59",
     birthday: "10/10/2010",
     gender: "M",
-    email: "johndoe999@email.com",
+    email: "johndoe@email.com",
     mobile: "(13) 999999999",
     street: "Nowhere St.",
     number: "1",
     complement: "apt. 999",
     zip: "11075-350",
-    city: "San Angels",
+    city: "São Paulo",
     state: "SP",
   },
 };
 
-const invalidClientData = {
+const invalidEmployeeData = {
   name: "John Doe",
+  password: "123456",
+  job: "Médico(a)",
+  specialty: "Psiquiatra",
   data: {
     birthday: "10/10/2010",
     gender: "M",
@@ -58,14 +64,14 @@ const invalidClientData = {
     number: "1",
     complement: "apt. 999",
     zip: "11075-350",
-    city: "San Angels",
+    city: "São Paulo",
     state: "SP",
   },
 };
 
 let token = "";
 
-describe("Register client route | Integration Test", () => {
+describe("Register employee route | Integration Test", () => {
   beforeAll(async () => {
     await database.createConnection();
   });
@@ -74,7 +80,7 @@ describe("Register client route | Integration Test", () => {
     await database.closeConnection();
   });
 
-  it("Should return a Client as JSON response with status code 201", async () => {
+  it("Should return an Employee as JSON response with status code 201", async () => {
     await adminService.registerEmployee({ validated: adminData });
 
     const adminResponse = await supertest(app)
@@ -84,21 +90,23 @@ describe("Register client route | Integration Test", () => {
     token = adminResponse.body.Token;
 
     const response = await supertest(app)
-      .post("/admin/clients/register")
+      .post("/admin/employees/register")
       .set("Authorization", `Bearer ${token}`)
-      .send({ ...validClientData });
+      .send({ ...validEmployeeData });
 
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty("id");
     expect(response.body.data).toHaveProperty("id");
-    expect(response.body.data.email).toStrictEqual(validClientData.data.email);
+    expect(response.body.data.email).toStrictEqual(
+      validEmployeeData.data.email
+    );
   });
 
-  it("Should return an error message with status code 400", async () => {
+  it("Should return an error message with status code 400 due to missing required data", async () => {
     const response = await supertest(app)
       .post("/admin/employees/register")
       .set("Authorization", `Bearer ${token}`)
-      .send({ ...invalidClientData });
+      .send({ ...invalidEmployeeData });
 
     expect(response.status).toBe(400);
     expect(response.body).toHaveProperty("error");
