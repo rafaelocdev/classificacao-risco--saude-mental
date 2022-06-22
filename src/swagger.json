@@ -1,0 +1,167 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Classificação de Risco de Saúde Mental API",
+    "description": "Está documentação visa esclarecer o uso dos endpoints da API de classificação de risco de saúde mental.<br><br>Fique atento aos 'cadeados' nos endpoints, isso denota rotas que necessitam de autenticação.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api-risco-saude-mental.herokuapp.com",
+      "description": "API de produção"
+    },
+    {
+      "url": "http://localhost:3000",
+      "description": "API de desenvolvimento"
+    }
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "description": "Rota para login qualquer tipo de funcionário",
+        "tags": ["Login"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              },
+              "examples": {
+                "admin": {
+                  "value": {
+                    "email": "admin@admin.com",
+                    "password": "1234"
+                  }
+                },
+                "doctor": {
+                  "value": {
+                    "email": "doctor@doctor.com",
+                    "password": "1234"
+                  }
+                },
+                "nurse": {
+                  "value": {
+                    "email": "nurse@nurse.com",
+                    "password": "1234"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Este erro ocorre quando algum campo necessário não é enviado no body da requisição ou o tipo de dado de algum campo é diferente do esperado, veja o schema do body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse400"
+                },
+                "examples": {
+                  "credenciais_nao_enviadas": {
+                    "value": {
+                      "error": [
+                        "email is a required field",
+                        "password is a required field"
+                      ]
+                    }
+                  },
+                  "email_enviado_como_array": {
+                    "value": {
+                      "error": [
+                        "email must be a `string` type, but the final value was: `[\n  \"\\\"doctor@email.com\\\"\"\n]`."
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Este erro ocorre quando as credenciais enviadas são inválidas.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse401"
+                },
+                "examples": {
+                  "credenciais_invalidas": {
+                    "value": {
+                      "message": "Invalid credentials"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Login realizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse200"
+                },
+                "examples": {
+                  "sucesso": {
+                    "value": {
+                      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAzOTQ2NjFhLTAwODktNGM1Ni1iNGZiLTdhZTBiZTQ1YzJhOSIsImVtYWlsIjoiZG9jdG9yQGVtYWlsLmNvbSIsImlhdCI6MTY1NTkzOTQzOSwiZXhwIjoxNjU1OTQzMDM5fQ.2tY9XWLmpB2J4EmS91K7s3Qk9Xt7BZBabct5NDuf23w"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "LoginResponse200": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "LoginResponse400": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "LoginResponse401": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
