@@ -24,6 +24,7 @@ doctorRouter.patch(
   "/appointments/start/:id",
   validateToken,
   validateIsDoctor,
+  verifyAppointmentOr404,
   verifyIfAppointmentHasStarted,
   verifyIfAppointmentHasFinished,
   doctorController.appointmentStart,

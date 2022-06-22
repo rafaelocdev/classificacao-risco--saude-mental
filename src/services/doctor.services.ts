@@ -12,9 +12,8 @@ import * as uuid from "uuid";
 import {
   serializedClient,
   serializedClientWithAppointments,
-  serializeOnDutySchema,
+  serializeAppointmentSchema,
 } from "../schemas";
-import { validate } from "uuid";
 
 interface IClientById {
   client: Client;
@@ -62,17 +61,32 @@ class DoctorService {
   startAppointment = async ({ decoded, appointment }: Request) => {
     const { id } = decoded;
 
-    appointment.onDuty = await onDutyRepo.findOne({
+    const foundOnDuty = await onDutyRepo.findOne({
       employee: { id } as Employee,
     });
 
-    const updatedAppointment = await appointmentRepo.update(appointment.id, {
+    foundOnDuty.onDuty = true;
+    await onDutyRepo.update(foundOnDuty.id, { ...foundOnDuty });
+
+    appointment.onDuty = foundOnDuty;
+    await appointmentRepo.update(appointment.id, {
       ...appointment,
     });
 
-    return await serializeOnDutySchema.validate(updatedAppointment, {
-      stripUnknown: true,
+    const updatedAppointment = await appointmentRepo.listOne({
+      id: appointment.id,
     });
+
+    const { onDuty, ...response } = updatedAppointment;
+
+    // return await serializeAppointmentSchema.validate(
+    //   { ...updatedAppointment },
+    //   {
+    //     stripUnknown: true,
+    //   },
+    // );
+
+    return response;
   };
 }
 

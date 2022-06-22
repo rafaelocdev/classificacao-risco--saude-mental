@@ -8,7 +8,9 @@ const verifyIfAppointmentHasStarted = (
 ) => {
   const { appointment } = req;
 
-  if (appointment.onDuty) {
+  const appointmentIsStarted = appointment.onDuty !== null;
+
+  if (appointmentIsStarted) {
     throw new ErrorHandler(409, "Appointment was already started.");
   }
 

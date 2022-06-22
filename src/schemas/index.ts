@@ -11,7 +11,7 @@ import {
 import {
   serializedClient,
   serializedClientWithAppointments,
-  serializeOnDutySchema,
+  serializeAppointmentSchema,
 } from "./doctor";
 import { loginSchema } from "./login";
 import {
@@ -30,7 +30,7 @@ export {
   serializedClient,
   serializedClientWithAppointments,
   loginSchema,
-  serializeOnDutySchema,
+  serializeAppointmentSchema,
   createQueryMhRiskSchema,
   serializedQueryMhRiskSchema,
   updateEmployeeSchema,

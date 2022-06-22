@@ -2,10 +2,7 @@ import { Request, Response } from "express";
 import { NextFunction } from "express-serve-static-core";
 import { Appointment, Employee, OnDuty } from "../../../entities";
 import { ErrorHandler } from "../../../errors/errors";
-import {
-  validateIsDoctor,
-  verifyIfAppointmentHasStarted,
-} from "../../../middlewares";
+import { verifyIfAppointmentHasStarted } from "../../../middlewares";
 
 describe("Verify if appointment already has finished - Middleware | Unit tests", () => {
   const mockReq: Partial<Request> = {};
