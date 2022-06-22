@@ -25,16 +25,24 @@ export class nurseService {
         newQuery.insomnia = (validated as QueryMhRisk).insomnia;
         newQuery.mourning = (validated as QueryMhRisk).mourning;
         newQuery.selfAggression = (validated as QueryMhRisk).selfAggression;
-        newQuery.nurse = decoded.id
+        // newQuery.nurse = decoded.id
 
         if((validated as QueryMhRisk).depression == "1" && (validated as QueryMhRisk).selfAggression){
             console.log("Grave")
             newQuery.resultMhRisk = await resultMhRiskRepo.findOneBy({risk: "grave"})
+
+            await queryMhRiskRepo.save(newQuery);
+
+            return serializedQueryMhRiskSchema.validate(newQuery,{stripUnknown:true});
         }
 
         if((validated as QueryMhRisk).depression == "1" && !(validated as QueryMhRisk).selfAggression){
             console.log("Elevado")
             newQuery.resultMhRisk = await resultMhRiskRepo.findOneBy({risk: "elevado"})
+
+            await queryMhRiskRepo.save(newQuery);
+
+            return serializedQueryMhRiskSchema.validate(newQuery,{stripUnknown:true});
         }
 
         
@@ -45,12 +53,20 @@ export class nurseService {
             (validated as QueryMhRisk).mourning){
                 console.log("Risco baixo")
                 newQuery.resultMhRisk = await resultMhRiskRepo.findOneBy({risk: "baixo"})
+
+                await queryMhRiskRepo.save(newQuery);
+
+                return serializedQueryMhRiskSchema.validate(newQuery,{stripUnknown:true});
             }
 
 
         if((validated as QueryMhRisk).depression == "2"){
             console.log("Moderado")
             newQuery.resultMhRisk = await resultMhRiskRepo.findOneBy({risk: "moderado"})
+
+            await queryMhRiskRepo.save(newQuery);
+
+            return serializedQueryMhRiskSchema.validate(newQuery,{stripUnknown:true});
 
         }
 
@@ -61,15 +77,13 @@ export class nurseService {
             !(validated as QueryMhRisk).mourning){
                 console.log("Situação Inespecífica")
                 newQuery.resultMhRisk = await resultMhRiskRepo.findOneBy({risk: "inespecífico"})
+
+                await queryMhRiskRepo.save(newQuery);
+
+                return serializedQueryMhRiskSchema.validate(newQuery,{stripUnknown:true});
                 
         }
 
-         await queryMhRiskRepo.save(newQuery);
-
-         console.log(newQuery)
-
-
-        return serializedQueryMhRiskSchema.validate(newQuery,{stripUnknown:true});
 
     }
 }

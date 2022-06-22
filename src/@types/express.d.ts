@@ -1,5 +1,6 @@
 import express from "express";
 import { Client, Data, Employee, QueryMhRisk } from "../entities";
+import { Appointment } from "../entities";
 
 declare global {
   namespace Express {
