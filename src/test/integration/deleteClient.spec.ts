@@ -6,12 +6,12 @@ import { adminService } from "../../services";
 const adminData = {
   name: "Admin",
   password: "admin",
-  register: "329.825.570-02",
+  register: "111111",
   job: "Administrador(a)",
   specialty: "Admin",
   isActive: true,
   data: {
-    cpf: "36669523564",
+    cpf: "329.825.570-02",
     birthday: "25/04/1987",
     gender: "M",
     email: "admin@admin.com",
@@ -30,7 +30,7 @@ const adminCredentials = {
   password: "admin",
 };
 
-const validClientData = {
+const clientData = {
   name: "John Doe",
   subscription: "543219376",
   data: {
@@ -48,24 +48,10 @@ const validClientData = {
   },
 };
 
-const invalidClientData = {
-  name: "John Doe",
-  data: {
-    birthday: "10/10/2010",
-    gender: "M",
-    mobile: "(13) 999999999",
-    street: "Nowhere St.",
-    number: "1",
-    complement: "apt. 999",
-    zip: "11075-350",
-    city: "San Angels",
-    state: "SP",
-  },
-};
-
 let token = "";
+let clientId = "";
 
-describe("Register client route | Integration Test", () => {
+describe("Delete client route | Integration Test", () => {
   beforeAll(async () => {
     await database.createConnection();
   });
@@ -74,7 +60,7 @@ describe("Register client route | Integration Test", () => {
     await database.closeConnection();
   });
 
-  it("Should return a Client as JSON response with status code 201", async () => {
+  it("Should return a successful message with status code 200", async () => {
     await adminService.registerEmployee({ validated: adminData });
 
     const adminResponse = await supertest(app)
@@ -83,24 +69,18 @@ describe("Register client route | Integration Test", () => {
 
     token = adminResponse.body.Token;
 
-    const response = await supertest(app)
+    const newClient = await supertest(app)
       .post("/admin/clients/register")
       .set("Authorization", `Bearer ${token}`)
-      .send({ ...validClientData });
+      .send(clientData);
 
-    expect(response.status).toBe(201);
-    expect(response.body).toHaveProperty("id");
-    expect(response.body.data).toHaveProperty("id");
-    expect(response.body.data.email).toStrictEqual(validClientData.data.email);
-  });
+    clientId = newClient.body.id;
 
-  it("Should return an error message with status code 400", async () => {
     const response = await supertest(app)
-      .post("/admin/employees/register")
-      .set("Authorization", `Bearer ${token}`)
-      .send({ ...invalidClientData });
+      .delete(`/admin/clients/${clientId}`)
+      .set("Authorization", `Bearer ${token}`);
 
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty("error");
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("message");
   });
 });
