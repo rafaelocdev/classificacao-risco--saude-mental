@@ -14,13 +14,13 @@ class LoginService {
       email: (validated as Data).email,
     });
 
+    if (!data) {
+      throw new ErrorHandler(401, "Invalid credentials");
+    }
+
     const employee = await employeeRepo.findOneBy({
       data: { id: data.id },
     });
-
-    if (!employee) {
-      throw new ErrorHandler(401, "Invalid credentials");
-    }
 
     if (!(await compare((validated as Employee).password, employee.password))) {
       throw new ErrorHandler(401, "Invalid credentials");
