@@ -15,13 +15,13 @@ export default class OnDuty {
   @PrimaryGeneratedColumn("uuid")
   id?: string;
 
-  @Column({ type: "boolean", name: "on_duty", default: false })
+  @Column({ name: "on_duty", default: false })
   onDuty?: boolean;
 
   @Column({ type: "boolean", default: false })
   available?: boolean;
 
-  @OneToOne(() => Employee)
+  @OneToOne(() => Employee, { eager: true })
   @JoinColumn({ name: "employee_id" })
   employee: Employee;
 

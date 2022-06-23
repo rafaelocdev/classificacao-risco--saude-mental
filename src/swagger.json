@@ -1,0 +1,1105 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Classificação de Risco de Saúde Mental API",
+    "description": "Está documentação visa esclarecer o uso dos endpoints da API de classificação de risco de saúde mental.<br><br>Fique atento aos 'cadeados' nos endpoints, isso denota rotas que necessitam de autenticação.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api-risco-saude-mental.herokuapp.com",
+      "description": "API de produção"
+    },
+    {
+      "url": "http://localhost:3000",
+      "description": "API de desenvolvimento"
+    }
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "description": "Rota para login qualquer tipo de funcionário",
+        "tags": ["Login"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              },
+              "examples": {
+                "admin": {
+                  "value": {
+                    "email": "admin@admin.com",
+                    "password": "1234"
+                  }
+                },
+                "doctor": {
+                  "value": {
+                    "email": "doctor@doctor.com",
+                    "password": "1234"
+                  }
+                },
+                "nurse": {
+                  "value": {
+                    "email": "nurse@nurse.com",
+                    "password": "1234"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Este erro ocorre quando algum campo necessário não é enviado no body da requisição ou o tipo de dado de algum campo é diferente do esperado, veja o schema do body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse400"
+                },
+                "examples": {
+                  "credenciais_nao_enviadas": {
+                    "value": {
+                      "error": [
+                        "email is a required field",
+                        "password is a required field"
+                      ]
+                    }
+                  },
+                  "email_enviado_como_array": {
+                    "value": {
+                      "error": [
+                        "email must be a `string` type, but the final value was: `[\n  \"\\\"doctor@email.com\\\"\"\n]`."
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Este erro ocorre quando as credenciais enviadas são inválidas.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse401"
+                },
+                "examples": {
+                  "credenciais_invalidas": {
+                    "value": {
+                      "message": "Invalid credentials"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Login realizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse200"
+                },
+                "examples": {
+                  "sucesso": {
+                    "value": {
+                      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAzOTQ2NjFhLTAwODktNGM1Ni1iNGZiLTdhZTBiZTQ1YzJhOSIsImVtYWlsIjoiZG9jdG9yQGVtYWlsLmNvbSIsImlhdCI6MTY1NTkzOTQzOSwiZXhwIjoxNjU1OTQzMDM5fQ.2tY9XWLmpB2J4EmS91K7s3Qk9Xt7BZBabct5NDuf23w"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/clients": {
+      "get": {
+        "description": "Route to client listing",
+        "tags": ["Admin"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Listing successful clients",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "clients": {
+                    "value": {
+                      "clients": [
+                        {
+                          "id": "50ce3967-4966-485e-9876-5eae0bbb3e06",
+                          "name": "John Doe 2",
+                          "subscription": "1432193",
+                          "data": {
+                            "id": "cd88e8aa-e1b6-4a85-bdc5-86515f1764c0",
+                            "cpf": "892.762.670-26",
+                            "birthday": "10/10/2012",
+                            "gender": "F",
+                            "email": "johndoe@email.com",
+                            "mobile": "(89) 4184-1510",
+                            "street": "Nowhere St. Pedro",
+                            "number": "15",
+                            "complement": "apt. 9990",
+                            "zip": "06310-320",
+                            "city": "San Angels Del Atacama",
+                            "state": "DF"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This error occurs when a non-admin employee tries to access this route, or when the auth token does not exist or is invalid.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "non admin employee": {
+                    "value": {
+                      "message": "Only admins are allowed to access this route."
+                    }
+                  },
+                  "token expired": {
+                    "value": {
+                      "message": "Jwt expired"
+                    }
+                  },
+                  "token undefined": {
+                    "value": {
+                      "message": "Jwt not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/employees": {
+      "get": {
+        "description": "Route to employee listing.",
+        "tags": ["Admin"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Listing successful employees",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "clients": {
+                    "value": {
+                      "employees": [
+                        {
+                          "id": "0394661a-0089-4c56-b4fb-7ae0be45c2a9",
+                          "name": "John Dow",
+                          "specialty": "Psychiatry",
+                          "job": "Doctor",
+                          "register": "1111111113",
+                          "isActive": true,
+                          "data": {
+                            "id": "cd88e8aa-e1b6-4a85-bdc5-86515f1764c0",
+                            "cpf": "892.762.670-26",
+                            "birthday": "10/10/2012",
+                            "gender": "F",
+                            "email": "johndoe@email.com",
+                            "mobile": "(89) 4184-1510",
+                            "street": "Nowhere St. Pedro",
+                            "number": "15",
+                            "complement": "apt. 9990",
+                            "zip": "06310-320",
+                            "city": "San Angels Del Atacama",
+                            "state": "DF"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This error occurs when a non-admin employee tries to access this route, or when the auth token does not exist or is invalid.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "non admin employee": {
+                    "value": {
+                      "message": "Only admins are allowed to access this route."
+                    }
+                  },
+                  "token expired": {
+                    "value": {
+                      "message": "Jwt expired"
+                    }
+                  },
+                  "token undefined": {
+                    "value": {
+                      "message": "Jwt not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/procedures/{risk}": {
+      "get": {
+        "description": "Route to get procedure according to mental health risk level",
+        "tags": ["Admin"],
+        "parameters": [
+          {
+            "name": "risk",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Mental health risk level",
+            "required": true
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Procedure successfully obtained",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "grave": {
+                    "value": {
+                      "procedure": "Priority targeting, immediate clinical care."
+                    }
+                  },
+                  "elevated": {
+                    "value": {
+                      "procedure": "Immediate classification, clinical care without immediate risk of life."
+                    }
+                  },
+                  "moderated": {
+                    "value": {
+                      "procedure": "Treatment at CAPS and outpatient clinic specializing in mental health."
+                    }
+                  },
+                  "low": {
+                    "value": {
+                      "procedure": "Care in the primary health care network."
+                    }
+                  },
+                  "nonspecific": {
+                    "value": {
+                      "procedure": "No need for medical attention."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "This error occurs when an invalid risk is entered as a parameter, or when the auth token does not exist or is invalid.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "risk not exists": {
+                    "value": {
+                      "message": "Risk does not exist."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This error occurs when a non-admin employee tries to access this route, or when the auth token does not exist or is invalid.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "non admin employee": {
+                    "value": {
+                      "message": "Only admins are allowed to access this route."
+                    }
+                  },
+                  "token expired": {
+                    "value": {
+                      "message": "Jwt expired"
+                    }
+                  },
+                  "token undefined": {
+                    "value": {
+                      "message": "Jwt not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/clients/register": {
+      "post": {
+        "description": "Route to client register.",
+        "tags": ["Admin"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientRegisterRequest"
+              },
+              "examples": {
+                "client": {
+                  "value": {
+                    "name": "John Doe",
+                    "subscription": "23847628472",
+                    "data": {
+                      "cpf": "435.818.260-70",
+                      "birthday": "10/10/2010",
+                      "gender": "M",
+                      "email": "johndoeclient@email.com",
+                      "mobile": "(11) 99999-1506",
+                      "street": "Nowhere St.",
+                      "number": "1",
+                      "complement": "apt. 999",
+                      "zip": "06999-999",
+                      "city": "San Angels",
+                      "state": "SP"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful client registration.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "client": {
+                    "value": {
+                      "data": {
+                        "id": "aab0ca06-0712-4af7-bbf2-ade8a3d8f691",
+                        "cpf": "435.818.260-70",
+                        "birthday": "10/10/2010",
+                        "gender": "M",
+                        "email": "johndoeclient@email.com",
+                        "mobile": "(11) 99999-1506",
+                        "street": "Nowhere St.",
+                        "number": "1",
+                        "complement": "apt. 999",
+                        "zip": "06999-999",
+                        "city": "San Angels",
+                        "state": "SP"
+                      },
+                      "subscription": 23847628472,
+                      "name": "John Doe",
+                      "id": "585faae3-2420-4e4a-a836-1c8c97de3e8b"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "This error happens when some field is not passed or is passed in an invalid way",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "mandatory fields not used": {
+                    "value": {
+                      "error": [
+                        "name is a required field",
+                        "subscription is a required field"
+                      ]
+                    }
+                  },
+                  "mandatory data fields not used": {
+                    "value": {
+                      "error": [
+                        "data.cpf is a required field",
+                        "data.birthday is a required field",
+                        "data.gender is a required field",
+                        "data.email is a required field",
+                        "data.street is a required field",
+                        "data.number is a required field",
+                        "data.zip is a required field",
+                        "data.city is a required field",
+                        "data.state is a required field"
+                      ]
+                    }
+                  },
+                  "CPF || CEP || UF not valid": {
+                    "value": {
+                      "error": [
+                        "CPF is not valid",
+                        "CEP is not valid",
+                        "UF is not valid"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This error occurs when a non-admin employee tries to access this route, or when the auth token does not exist or is invalid.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "non admin employee": {
+                    "value": {
+                      "message": "Only admins are allowed to access this route."
+                    }
+                  },
+                  "token expired": {
+                    "value": {
+                      "message": "Jwt expired"
+                    }
+                  },
+                  "token undefined": {
+                    "value": {
+                      "message": "Jwt not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/employees/register": {
+      "post": {
+        "description": "Route to employee register.",
+        "tags": ["Admin"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmployeeRegisterRequest"
+              },
+              "examples": {
+                "doctor": {
+                  "value": {
+                    "name": "Sigmund Freud",
+                    "password": "123456",
+                    "register": "9999999",
+                    "job": "Doctor",
+                    "specialty": "Psychiatry",
+                    "data": {
+                      "cpf": "724.503.020-00",
+                      "birthday": "10/10/2010",
+                      "gender": "M",
+                      "email": "freud@email.com",
+                      "mobile": "(11) 99999-9999",
+                      "street": "Nowhere St.",
+                      "number": "1",
+                      "complement": "apt. 999",
+                      "zip": "06990-990",
+                      "city": "San Angels",
+                      "state": "SP"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful employee registration.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "employee": {
+                    "value": {
+                      "data": {
+                        "id": "51365263-bad6-4d81-8feb-df6e5aea1650",
+                        "cpf": "724.503.020-00",
+                        "birthday": "10/10/2010",
+                        "gender": "M",
+                        "email": "freud@email.com",
+                        "mobile": "(11) 99999-9999",
+                        "street": "Nowhere St.",
+                        "number": "1",
+                        "complement": "apt. 999",
+                        "zip": "06990-990",
+                        "city": "San Angels",
+                        "state": "SP"
+                      },
+                      "isActive": true,
+                      "specialty": "Psychiatry",
+                      "job": "Doctor",
+                      "register": "9999999",
+                      "name": "Sigmund Freud",
+                      "id": "b2d64e37-8ac1-4500-a59b-9cb93f587678"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "This error happens when some field is not passed or is passed in an invalid way",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "mandatory fields not used": {
+                    "value": {
+                      "error": [
+                        "name is a required field",
+                        "password is a required field",
+                        "register is a required field",
+                        "job is a required field",
+                        "specialty is a required field"
+                      ]
+                    }
+                  },
+                  "mandatory data fields not used": {
+                    "value": {
+                      "error": [
+                        "data.cpf is a required field",
+                        "data.birthday is a required field",
+                        "data.gender is a required field",
+                        "data.email is a required field",
+                        "data.street is a required field",
+                        "data.number is a required field",
+                        "data.zip is a required field",
+                        "data.city is a required field",
+                        "data.state is a required field"
+                      ]
+                    }
+                  },
+                  "CPF || CEP || UF not valid": {
+                    "value": {
+                      "error": [
+                        "CPF is not valid",
+                        "CEP is not valid",
+                        "UF is not valid"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This error occurs when a non-admin employee tries to access this route, or when the auth token does not exist or is invalid.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "non admin employee": {
+                    "value": {
+                      "message": "Only admins are allowed to access this route."
+                    }
+                  },
+                  "token expired": {
+                    "value": {
+                      "message": "Jwt expired"
+                    }
+                  },
+                  "token undefined": {
+                    "value": {
+                      "message": "Jwt not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/clients/{id}": {
+      "patch": {
+        "description": "Route to update client.<br><br>In the request body of this route, put only the data that will be updated.",
+        "tags": ["Admin"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Client identification",
+            "required": true
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateClientRequest"
+              },
+              "examples": {
+                "client": {
+                  "value": {
+                    "name": "John Doe 2",
+                    "data": {
+                      "cpf": "892.762.670-26",
+                      "birthday": "10/10/2012",
+                      "gender": "F",
+                      "mobile": "(89) 4184-1510",
+                      "street": "Nowhere St. Pedro",
+                      "number": "15",
+                      "complement": "apt. 9990",
+                      "zip": "06310-320",
+                      "city": "San Angels Del Atacama",
+                      "state": "DF"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful client update.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "client": {
+                    "value": {
+                      "data": {
+                        "state": "DF",
+                        "city": "San Angels Del Atacama",
+                        "zip": "06310-320",
+                        "complement": "apt. 9990",
+                        "number": "15",
+                        "street": "Nowhere St. Pedro",
+                        "mobile": "(89) 4184-1510",
+                        "email": "johndoe@email.com",
+                        "gender": "F",
+                        "birthday": "10/10/2012",
+                        "cpf": "892.762.670-26"
+                      },
+                      "subscription": "1432193",
+                      "name": "John Doe 2",
+                      "id": "50ce3967-4966-485e-9876-5eae0bbb3e06"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "This error happens when some field is not passed or is passed in an invalid way",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "CPF || CEP || UF not valid": {
+                    "value": {
+                      "error": [
+                        "CPF is not valid",
+                        "CEP is not valid",
+                        "UF is not valid"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This error occurs when a non-admin employee tries to access this route, or when the auth token does not exist or is invalid.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "non admin employee": {
+                    "value": {
+                      "message": "Only admins are allowed to access this route."
+                    }
+                  },
+                  "token expired": {
+                    "value": {
+                      "message": "Jwt expired"
+                    }
+                  },
+                  "token undefined": {
+                    "value": {
+                      "message": "Jwt not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/employees/{id}": {
+      "patch": {
+        "description": "Route to update employee.<br><br>In the request body of this route, put only the data that will be updated.",
+        "tags": ["Admin"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Employee identification",
+            "required": true
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEmployeeRequest"
+              },
+              "examples": {
+                "client": {
+                  "value": {
+                    "name": "Sigmund Freud",
+                    "password": "123456",
+                    "job": "Doctor",
+                    "specialty": "Psychiatry",
+                    "data": {
+                      "cpf": "724.503.020-00",
+                      "birthday": "10/10/2010",
+                      "gender": "M",
+                      "mobile": "(11) 99999-9999",
+                      "street": "Nowhere St.",
+                      "number": "1",
+                      "complement": "apt. 999",
+                      "zip": "06990-990",
+                      "city": "San Angels",
+                      "state": "SP"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful client update.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "client": {
+                    "value": {
+                      "data": {
+                        "state": "DF",
+                        "city": "San Angels Del Atacama",
+                        "zip": "06310-320",
+                        "complement": "apt. 9990",
+                        "number": "15",
+                        "street": "Nowhere St. Pedro",
+                        "mobile": "(89) 4184-1510",
+                        "email": "johndoe@email.com",
+                        "gender": "F",
+                        "birthday": "10/10/2012",
+                        "cpf": "892.762.670-26"
+                      },
+                      "subscription": "1432193",
+                      "name": "John Doe 2",
+                      "id": "50ce3967-4966-485e-9876-5eae0bbb3e06"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "This error happens when some field is passed in an invalid way",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "CPF || CEP || UF not valid": {
+                    "value": {
+                      "error": [
+                        "CPF is not valid",
+                        "CEP is not valid",
+                        "UF is not valid"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This error occurs when a non-admin employee tries to access this route, or when the auth token does not exist or is invalid.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "non admin employee": {
+                    "value": {
+                      "message": "Only admins are allowed to access this route."
+                    }
+                  },
+                  "token expired": {
+                    "value": {
+                      "message": "Jwt expired"
+                    }
+                  },
+                  "token undefined": {
+                    "value": {
+                      "message": "Jwt not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "This error occurs when a disallowed value is passed for a specific field.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "job not allowed": {
+                    "value": {
+                      "message": {
+                        "error": "Job not allowed",
+                        "allowed_values": ["Doctor", "Nurse", "Admin"]
+                      }
+                    }
+                  },
+                  "specialty not allowed": {
+                    "value": {
+                      "message": {
+                        "error": "Specialty not allowed",
+                        "allowed_values": ["Psychiatry", "Attendant", "Admin"]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/clients/{clientId}": {
+      "delete": {
+        "description": "Route to delete client.",
+        "tags": ["Admin"],
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Client identification",
+            "required": true
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful client delete.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "delete client": {
+                    "value": {
+                      "message": "User deleted successfully!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "This error happens when user not exists or id is invalid",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "invalid id": {
+                    "value": {
+                      "message": "User not found."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This error occurs when a non-admin employee tries to access this route, or when the auth token does not exist or is invalid.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "non admin employee": {
+                    "value": {
+                      "message": "Only admins are allowed to access this route."
+                    }
+                  },
+                  "token expired": {
+                    "value": {
+                      "message": "Jwt expired"
+                    }
+                  },
+                  "token undefined": {
+                    "value": {
+                      "message": "Jwt not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "LoginResponse200": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "LoginResponse400": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "LoginResponse401": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "EmployeeRegisterRequest": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "password": { "type": "string" },
+          "register": { "type": "string" },
+          "job": { "type": "string" },
+          "specialty": { "type": "string" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "cpf": { "type": "string" },
+              "birthday": { "type": "string" },
+              "gender": { "type": "string" },
+              "email": { "type": "string" },
+              "mobile": { "type": "string" },
+              "street": { "type": "string" },
+              "number": { "type": "string" },
+              "complement": { "type": "string" },
+              "zip": { "type": "string" },
+              "city": { "type": "string" },
+              "state": { "type": "string" }
+            }
+          }
+        }
+      },
+      "ClientRegisterRequest": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "subscription": { "type": "string" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "cpf": { "type": "string" },
+              "birthday": { "type": "string" },
+              "gender": { "type": "string" },
+              "email": { "type": "string" },
+              "mobile": { "type": "string" },
+              "street": { "type": "string" },
+              "number": { "type": "string" },
+              "complement": { "type": "string" },
+              "zip": { "type": "string" },
+              "city": { "type": "string" },
+              "state": { "type": "string" }
+            }
+          }
+        }
+      },
+      "UpdateClientRequest": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "cpf": { "type": "string" },
+              "birthday": { "type": "string" },
+              "gender": { "type": "string" },
+              "mobile": { "type": "string" },
+              "street": { "type": "string" },
+              "number": { "type": "string" },
+              "complement": { "type": "string" },
+              "zip": { "type": "string" },
+              "city": { "type": "string" },
+              "state": { "type": "string" }
+            }
+          }
+        }
+      },
+      "UpdateEmployeeRequest": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "password": { "type": "string" },
+          "job": { "type": "string" },
+          "specialty": { "type": "string" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "cpf": { "type": "string" },
+              "birthday": { "type": "string" },
+              "gender": { "type": "string" },
+              "mobile": { "type": "string" },
+              "street": { "type": "string" },
+              "number": { "type": "string" },
+              "complement": { "type": "string" },
+              "zip": { "type": "string" },
+              "city": { "type": "string" },
+              "state": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

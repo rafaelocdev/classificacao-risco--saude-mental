@@ -15,28 +15,28 @@ export default class QueryMhRisk {
   @PrimaryGeneratedColumn("uuid")
   id?: string;
 
-  @Column({ type: "enum", enum: [1, 2, 3] })
-  depression: number;
+  @Column()
+  depression: string;
 
-  @Column({ type: "boolean", name: "self_aggression" })
+  @Column({ name: "self_aggression" })
   selfAggression: boolean;
 
-  @Column({ type: "boolean" })
+  @Column()
   insomnia: boolean;
 
-  @Column({ type: "boolean" })
+  @Column()
   drugs: boolean;
 
-  @Column({ type: "boolean" })
+  @Column()
   mourning: boolean;
 
-  @Column({ type: "boolean", name: "family_support" })
+  @Column({ name: "family_support" })
   familySupport: boolean;
 
   @CreateDateColumn({ name: "evaluation_date" })
   evaluationDate?: Date;
 
-  @ManyToOne(() => Client, (client) => client.queriesMhRisk)
+  @ManyToOne(() => Client, (client) => client.queriesMhRisk, { eager: true })
   @JoinColumn({ name: "client_id" })
   client: Client;
 

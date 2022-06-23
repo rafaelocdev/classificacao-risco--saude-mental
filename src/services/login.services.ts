@@ -14,24 +14,24 @@ class LoginService {
       email: (validated as Data).email,
     });
 
+    if (!data) {
+      throw new ErrorHandler(401, "Invalid credentials");
+    }
+
     const employee = await employeeRepo.findOneBy({
       data: { id: data.id },
     });
-
-    if (!employee) {
-      throw new ErrorHandler(401, "Invalid credentials");
-    }
 
     if (!(await compare((validated as Employee).password, employee.password))) {
       throw new ErrorHandler(401, "Invalid credentials");
     }
 
     const token = jwt.sign(
-      { id: employee.id, email: data.email },
+      { id: employee.id, email: data.email, job: employee.job },
       process.env.SECRET_KEY,
       {
         expiresIn: process.env.EXPIRES_IN,
-      }
+      },
     );
 
     return token;
