@@ -12,8 +12,6 @@ export class nurseService {
     params,
     decoded,
   }: Request): Promise<AssertsShape<any>> => {
-    console.log(validated);
-
     if (!params.id) {
       throw new ErrorHandler(400, "Client id is required");
     }
@@ -38,6 +36,12 @@ export class nurseService {
       newQuery.resultMhRisk = await resultMhRiskRepo.findOneBy({
         risk: "grave",
       });
+
+      await queryMhRiskRepo.save(newQuery);
+
+      return serializedQueryMhRiskSchema.validate(newQuery, {
+        stripUnknown: true,
+      });
     }
 
     if (
@@ -47,6 +51,12 @@ export class nurseService {
       console.log("Elevado");
       newQuery.resultMhRisk = await resultMhRiskRepo.findOneBy({
         risk: "elevado",
+      });
+
+      await queryMhRiskRepo.save(newQuery);
+
+      return serializedQueryMhRiskSchema.validate(newQuery, {
+        stripUnknown: true,
       });
     }
 
@@ -61,12 +71,24 @@ export class nurseService {
       newQuery.resultMhRisk = await resultMhRiskRepo.findOneBy({
         risk: "baixo",
       });
+
+      await queryMhRiskRepo.save(newQuery);
+
+      return serializedQueryMhRiskSchema.validate(newQuery, {
+        stripUnknown: true,
+      });
     }
 
     if ((validated as QueryMhRisk).depression == "2") {
       console.log("Moderado");
       newQuery.resultMhRisk = await resultMhRiskRepo.findOneBy({
         risk: "moderado",
+      });
+
+      await queryMhRiskRepo.save(newQuery);
+
+      return serializedQueryMhRiskSchema.validate(newQuery, {
+        stripUnknown: true,
       });
     }
 
@@ -81,15 +103,13 @@ export class nurseService {
       newQuery.resultMhRisk = await resultMhRiskRepo.findOneBy({
         risk: "inespecífico",
       });
+
+      await queryMhRiskRepo.save(newQuery);
+
+      return serializedQueryMhRiskSchema.validate(newQuery, {
+        stripUnknown: true,
+      });
     }
-
-    await queryMhRiskRepo.save(newQuery);
-
-    console.log(newQuery);
-
-    return serializedQueryMhRiskSchema.validate(newQuery, {
-      stripUnknown: true,
-    });
   };
 }
 
