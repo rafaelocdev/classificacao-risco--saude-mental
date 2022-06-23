@@ -298,6 +298,235 @@
           }
         }
       }
+    },
+    "/admin/clients/register": {
+      "post": {
+        "description": "Route to client register.",
+        "tags": ["Admin"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientRegisterRequest"
+              },
+              "examples": {
+                "client": {
+                  "value": {
+                    "name": "John Doe",
+                    "subscription": "23847628472",
+                    "data": {
+                      "cpf": "435.818.260-70",
+                      "birthday": "10/10/2010",
+                      "gender": "M",
+                      "email": "johndoeclient@email.com",
+                      "mobile": "(11) 99999-1506",
+                      "street": "Nowhere St.",
+                      "number": "1",
+                      "complement": "apt. 999",
+                      "zip": "06999-999",
+                      "city": "San Angels",
+                      "state": "SP"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful client registration.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "client": {
+                    "value": {
+                      "data": {
+                        "id": "aab0ca06-0712-4af7-bbf2-ade8a3d8f691",
+                        "cpf": "435.818.260-70",
+                        "birthday": "10/10/2010",
+                        "gender": "M",
+                        "email": "johndoeclient@email.com",
+                        "mobile": "(11) 99999-1506",
+                        "street": "Nowhere St.",
+                        "number": "1",
+                        "complement": "apt. 999",
+                        "zip": "06999-999",
+                        "city": "San Angels",
+                        "state": "SP"
+                      },
+                      "subscription": 23847628472,
+                      "name": "John Doe",
+                      "id": "585faae3-2420-4e4a-a836-1c8c97de3e8b"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "This error happens when some field is not passed or is passed in an invalid way",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "mandatory fields not used": {
+                    "value": {
+                      "error": [
+                        "name is a required field",
+                        "subscription is a required field"
+                      ]
+                    }
+                  },
+                  "mandatory data fields not used": {
+                    "value": {
+                      "error": [
+                        "data.cpf is a required field",
+                        "data.birthday is a required field",
+                        "data.gender is a required field",
+                        "data.email is a required field",
+                        "data.street is a required field",
+                        "data.number is a required field",
+                        "data.zip is a required field",
+                        "data.city is a required field",
+                        "data.state is a required field"
+                      ]
+                    }
+                  },
+                  "CPF || CEP || UF not valid": {
+                    "value": {
+                      "error": [
+                        "CPF is not valid",
+                        "CEP is not valid",
+                        "UF is not valid"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/employees/register": {
+      "post": {
+        "description": "Route to employee register.",
+        "tags": ["Admin"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmployeeRegisterRequest"
+              },
+              "examples": {
+                "doctor": {
+                  "value": {
+                    "name": "Sigmund Freud",
+                    "password": "123456",
+                    "register": "9999999",
+                    "job": "Doctor",
+                    "specialty": "Psychiatry",
+                    "data": {
+                      "cpf": "724.503.020-00",
+                      "birthday": "10/10/2010",
+                      "gender": "M",
+                      "email": "freud@email.com",
+                      "mobile": "(11) 99999-9999",
+                      "street": "Nowhere St.",
+                      "number": "1",
+                      "complement": "apt. 999",
+                      "zip": "06990-990",
+                      "city": "San Angels",
+                      "state": "SP"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful employee registration.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "employee": {
+                    "value": {
+                      "data": {
+                        "id": "51365263-bad6-4d81-8feb-df6e5aea1650",
+                        "cpf": "724.503.020-00",
+                        "birthday": "10/10/2010",
+                        "gender": "M",
+                        "email": "freud@email.com",
+                        "mobile": "(11) 99999-9999",
+                        "street": "Nowhere St.",
+                        "number": "1",
+                        "complement": "apt. 999",
+                        "zip": "06990-990",
+                        "city": "San Angels",
+                        "state": "SP"
+                      },
+                      "isActive": true,
+                      "specialty": "Psychiatry",
+                      "job": "Doctor",
+                      "register": "9999999",
+                      "name": "Sigmund Freud",
+                      "id": "b2d64e37-8ac1-4500-a59b-9cb93f587678"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "This error happens when some field is not passed or is passed in an invalid way",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "mandatory fields not used": {
+                    "value": {
+                      "error": [
+                        "name is a required field",
+                        "password is a required field",
+                        "register is a required field",
+                        "job is a required field",
+                        "specialty is a required field"
+                      ]
+                    }
+                  },
+                  "mandatory data fields not used": {
+                    "value": {
+                      "error": [
+                        "data.cpf is a required field",
+                        "data.birthday is a required field",
+                        "data.gender is a required field",
+                        "data.email is a required field",
+                        "data.street is a required field",
+                        "data.number is a required field",
+                        "data.zip is a required field",
+                        "data.city is a required field",
+                        "data.state is a required field"
+                      ]
+                    }
+                  },
+                  "CPF || CEP || UF not valid": {
+                    "value": {
+                      "error": [
+                        "CPF is not valid",
+                        "CEP is not valid",
+                        "UF is not valid"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -344,6 +573,55 @@
         "properties": {
           "message": {
             "type": "string"
+          }
+        }
+      },
+      "EmployeeRegisterRequest": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "password": { "type": "string" },
+          "register": { "type": "string" },
+          "job": { "type": "string" },
+          "specialty": { "type": "string" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "cpf": { "type": "string" },
+              "birthday": { "type": "string" },
+              "gender": { "type": "string" },
+              "email": { "type": "string" },
+              "mobile": { "type": "string" },
+              "street": { "type": "string" },
+              "number": { "type": "string" },
+              "complement": { "type": "string" },
+              "zip": { "type": "string" },
+              "city": { "type": "string" },
+              "state": { "type": "string" }
+            }
+          }
+        }
+      },
+      "ClientRegisterRequest": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "subscription": { "type": "string" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "cpf": { "type": "string" },
+              "birthday": { "type": "string" },
+              "gender": { "type": "string" },
+              "email": { "type": "string" },
+              "mobile": { "type": "string" },
+              "street": { "type": "string" },
+              "number": { "type": "string" },
+              "complement": { "type": "string" },
+              "zip": { "type": "string" },
+              "city": { "type": "string" },
+              "state": { "type": "string" }
+            }
           }
         }
       }
