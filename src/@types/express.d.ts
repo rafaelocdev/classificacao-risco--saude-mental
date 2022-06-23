@@ -8,7 +8,9 @@ declare global {
 
       user: Partial<Client | Employee>;
 
-      validated: Client | Data | Employee | QueryMhRisk;
+      validated: Client | Data | Employee | QueryMhRisk ;
+
+      appointment: Partial<Appointment>
     }
   }
 }

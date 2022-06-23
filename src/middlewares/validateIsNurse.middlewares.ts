@@ -6,7 +6,7 @@ const validateIsNurse = async ( req: Request, _: Response, next: NextFunction) =
     
     const employee = await employeeRepo.findOneBy({id: req.decoded.id})
 
-    if(employee.specialty !== "Nurse"){
+    if(employee.job !== "Nurse"){
         throw new ErrorHandler(
             401, "Only nurses are allowed to access this route"
         );
