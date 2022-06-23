@@ -113,6 +113,123 @@
           }
         }
       }
+    },
+    "/admin/clients": {
+      "get": {
+        "description": "Route to client listing",
+        "tags": ["Admin"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Listing successful clients",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "clients": {
+                    "value": {
+                      "clients": [
+                        {
+                          "id": "50ce3967-4966-485e-9876-5eae0bbb3e06",
+                          "name": "John Doe 2",
+                          "subscription": "1432193",
+                          "data": {
+                            "id": "cd88e8aa-e1b6-4a85-bdc5-86515f1764c0",
+                            "cpf": "892.762.670-26",
+                            "birthday": "10/10/2012",
+                            "gender": "F",
+                            "email": "johndoe@email.com",
+                            "mobile": "(89) 4184-1510",
+                            "street": "Nowhere St. Pedro",
+                            "number": "15",
+                            "complement": "apt. 9990",
+                            "zip": "06310-320",
+                            "city": "San Angels Del Atacama",
+                            "state": "DF"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This error occurs when a non-admin employee tries to access the customer list",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "unauthorized_employee": {
+                    "value": {
+                      "message": "Only admins are allowed to access this route."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/employees": {
+      "get": {
+        "description": "Route to employee listing.",
+        "tags": ["Admin"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Listing successful employees",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "clients": {
+                    "value": {
+                      "employees": [
+                        {
+                          "id": "0394661a-0089-4c56-b4fb-7ae0be45c2a9",
+                          "name": "John Dow",
+                          "specialty": "Psychiatry",
+                          "job": "Doctor",
+                          "register": "1111111113",
+                          "isActive": true,
+                          "data": {
+                            "id": "cd88e8aa-e1b6-4a85-bdc5-86515f1764c0",
+                            "cpf": "892.762.670-26",
+                            "birthday": "10/10/2012",
+                            "gender": "F",
+                            "email": "johndoe@email.com",
+                            "mobile": "(89) 4184-1510",
+                            "street": "Nowhere St. Pedro",
+                            "number": "15",
+                            "complement": "apt. 9990",
+                            "zip": "06310-320",
+                            "city": "San Angels Del Atacama",
+                            "state": "DF"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This error occurs when a non-admin employee tries to access the customer list",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "unauthorized_employee": {
+                    "value": {
+                      "message": "Only admins are allowed to access this route."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
