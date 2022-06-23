@@ -21,7 +21,7 @@ export default class OnDuty {
   @Column({ type: "boolean", default: false })
   available?: boolean;
 
-  @OneToOne(() => Employee)
+  @OneToOne(() => Employee, { eager: true })
   @JoinColumn({ name: "employee_id" })
   employee: Employee;
 
