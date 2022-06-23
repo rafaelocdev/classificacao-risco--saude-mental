@@ -95,7 +95,7 @@ export default class DoctorService {
         },
       };
     } catch (err) {
-      throw new ErrorHandler(500, err);
+      throw new ErrorHandler(400, err);
     }
 
     return serializedFinishedAppointmentSchema.validate(objReturn, {
