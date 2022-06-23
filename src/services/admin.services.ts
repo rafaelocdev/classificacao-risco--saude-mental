@@ -7,8 +7,9 @@ import {
   clientRepo,
   dataRepo,
   resultMhRiskRepo,
+  onDutyRepo,
 } from "../repositories";
-import { Client, Data, Employee } from "../entities";
+import { Client, Data, Employee, OnDuty } from "../entities";
 import {
   serializedData,
   serializedUpdatedClientSchema,
@@ -177,7 +178,7 @@ class AdminService {
 
     const hashedPassword = await bcrypt.hash(
       (validated as Employee).password,
-      10
+      10,
     );
 
     const newEmployeeData = new Data();
@@ -206,6 +207,8 @@ class AdminService {
     newEmployee.data = newEmployeeData;
 
     await employeeRepo.save(newEmployee);
+
+    await this.registerOnDuty(newEmployee);
 
     return await serializeEmployeeData.validate(newEmployee, {
       stripUnknown: true,
@@ -307,6 +310,18 @@ class AdminService {
     return await getAllEmployeesSchema.validate(employees, {
       stripUnknown: true,
     });
+  };
+
+  registerOnDuty = async (employee: Employee) => {
+    if (employee.job === "Médico(a)") {
+      const newOnDuty = new OnDuty();
+      newOnDuty.employee = employee;
+      await onDutyRepo.save(newOnDuty);
+    }
+  };
+
+  getAllOnDuty = async () => {
+    return await onDutyRepo.findAll();
   };
 
   getProcedure = async ({ params }: Request) => {

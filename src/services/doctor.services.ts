@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { Appointment, Client, QueryMhRisk } from "../entities";
+import { Appointment, Client, Employee, QueryMhRisk } from "../entities";
 import { ErrorHandler } from "../errors/errors";
 import {
   appointmentRepo,
@@ -12,6 +12,7 @@ import * as uuid from "uuid";
 import {
   serializedClient,
   serializedClientWithAppointments,
+  serializeAppointmentSchema,
   serializedFinishedAppointmentSchema,
 } from "../schemas";
 
@@ -62,6 +63,60 @@ class DoctorService {
     });
   };
 
+  startAppointment = async ({ decoded, appointment }: Request) => {
+    const { id } = decoded;
+
+    const foundOnDuty = await onDutyRepo.findOne({
+      employee: { id } as Employee,
+    });
+
+    foundOnDuty.onDuty = true;
+    await onDutyRepo.update(foundOnDuty.id, { ...foundOnDuty });
+
+    appointment.onDuty = foundOnDuty;
+    await appointmentRepo.update(appointment.id, {
+      ...appointment,
+    });
+
+    const updatedAppointment = await appointmentRepo.listOne({
+      id: appointment.id,
+    });
+
+    const {
+      action,
+      anamnesis,
+      id: appointmentId,
+      queryMhRisk,
+    } = updatedAppointment;
+
+    const response = {
+      appointment: {
+        query_mh_risk: {
+          resultMhRisk: queryMhRisk.resultMhRisk.risk,
+          evaluation_ate: queryMhRisk.evaluationDate,
+          family_support: queryMhRisk.familySupport,
+          mourning: queryMhRisk.mourning,
+          drugs: queryMhRisk.drugs,
+          insomnia: queryMhRisk.insomnia,
+          self_aggression: queryMhRisk.selfAggression,
+          id: queryMhRisk.id,
+        },
+        doctor: {
+          id: id,
+          name: foundOnDuty.employee.name,
+          specialty: foundOnDuty.employee.specialty,
+        },
+        action: action,
+        anamnesis: anamnesis,
+        id: appointmentId,
+      },
+      subscription: queryMhRisk.client.subscription,
+      client: queryMhRisk.client.name,
+      id: queryMhRisk.client.id,
+    };
+
+    return response;
+  };
   finishAppointment = async ({ appointment, validated }: Request) => {
     let objReturn = {};
 

@@ -9,11 +9,17 @@ class DoctorController {
   };
 
   getClientById = async (req: Request, res: Response) => {
-    // const doctor = new doctorService();
-    // const client = await doctor.getClientById(req);
     const client = await doctorService.getClientById(req);
 
     return res.status(200).json(client);
+  };
+
+  appointmentStart = async (req: Request, res: Response) => {
+    const startedAppointment = await doctorService.startAppointment(req);
+
+    console.log(startedAppointment);
+
+    return res.status(201).json({ ...startedAppointment });
   };
 
   finishAppointment = async (req: Request, res: Response) => {

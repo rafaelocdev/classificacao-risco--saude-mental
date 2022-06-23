@@ -7,9 +7,12 @@ import {
   serializedFinishedAppointmentSchema,
 } from "./finishAppointment.schema";
 
+import { serializeAppointmentSchema } from "./startAppointment.schema";
+
 export {
   serializedClient,
   serializedClientWithAppointments,
   finishAppointmentSchema,
   serializedFinishedAppointmentSchema,
+  serializeAppointmentSchema,
 };

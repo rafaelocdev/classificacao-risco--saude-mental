@@ -22,8 +22,8 @@ export default class Appointment {
   action?: string;
 
   @ManyToOne(() => OnDuty, (onDuty) => onDuty.appointments, {
-    eager: true,
     nullable: true,
+    eager: true,
   })
   @JoinColumn({ name: "on_duty_id", referencedColumnName: "employee" })
   onDuty: OnDuty;

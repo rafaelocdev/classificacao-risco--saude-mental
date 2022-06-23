@@ -8,7 +8,11 @@ import {
   updateClientSchema,
   updateEmployeeSchema,
 } from "./admin";
-import { serializedClient, serializedClientWithAppointments } from "./doctor";
+import {
+  serializedClient,
+  serializedClientWithAppointments,
+  serializeAppointmentSchema,
+} from "./doctor";
 import { loginSchema } from "./login";
 import {
   finishAppointmentSchema,
@@ -30,6 +34,7 @@ export {
   serializedClient,
   serializedClientWithAppointments,
   loginSchema,
+  serializeAppointmentSchema,
   finishAppointmentSchema,
   serializedFinishedAppointmentSchema,
   createQueryMhRiskSchema,
