@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { ErrorHandler } from "../errors/errors";
 import { appointmentRepo } from "../repositories";
+import { validate } from "uuid";
 
 const verifyAppointmentOr404 = async (
   req: Request,
@@ -9,7 +10,11 @@ const verifyAppointmentOr404 = async (
 ) => {
   const { id } = req.params;
 
-  const foundAppointment = await appointmentRepo.listOne({id: id});
+  if (!validate(id)) {
+    throw new ErrorHandler(400, "Invalid uuid.");
+  }
+
+  const foundAppointment = await appointmentRepo.listOne({ id: id });
 
   if (!foundAppointment) {
     throw new ErrorHandler(404, "Appointment not found.");
