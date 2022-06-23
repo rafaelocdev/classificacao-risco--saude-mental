@@ -230,6 +230,74 @@
           }
         }
       }
+    },
+    "/admin/procedures/{risk}": {
+      "get": {
+        "description": "Route to get procedure according to mental health risk level",
+        "tags": ["Admin"],
+        "parameters": [
+          {
+            "name": "risk",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Mental health risk level",
+            "required": true
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Procedure successfully obtained",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "grave": {
+                    "value": {
+                      "procedure": "Priority targeting, immediate clinical care."
+                    }
+                  },
+                  "elevated": {
+                    "value": {
+                      "procedure": "Immediate classification, clinical care without immediate risk of life."
+                    }
+                  },
+                  "moderated": {
+                    "value": {
+                      "procedure": "Treatment at CAPS and outpatient clinic specializing in mental health."
+                    }
+                  },
+                  "low": {
+                    "value": {
+                      "procedure": "Care in the primary health care network."
+                    }
+                  },
+                  "nonspecific": {
+                    "value": {
+                      "procedure": "No need for medical attention."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "This error occurs when an invalid risk is entered as a parameter.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "risk not exists": {
+                    "value": {
+                      "message": "Risk does not exist."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
