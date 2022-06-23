@@ -155,13 +155,23 @@
             }
           },
           "401": {
-            "description": "This error occurs when a non-admin employee tries to access the customer list",
+            "description": "This error occurs when a non-admin employee tries to access this route, or when the auth token does not exist or is invalid.",
             "content": {
               "application/json": {
                 "examples": {
-                  "unauthorized_employee": {
+                  "non admin employee": {
                     "value": {
                       "message": "Only admins are allowed to access this route."
+                    }
+                  },
+                  "token expired": {
+                    "value": {
+                      "message": "Jwt expired"
+                    }
+                  },
+                  "token undefined": {
+                    "value": {
+                      "message": "Jwt not found"
                     }
                   }
                 }
@@ -215,13 +225,23 @@
             }
           },
           "401": {
-            "description": "This error occurs when a non-admin employee tries to access the customer list",
+            "description": "This error occurs when a non-admin employee tries to access this route, or when the auth token does not exist or is invalid.",
             "content": {
               "application/json": {
                 "examples": {
-                  "unauthorized_employee": {
+                  "non admin employee": {
                     "value": {
                       "message": "Only admins are allowed to access this route."
+                    }
+                  },
+                  "token expired": {
+                    "value": {
+                      "message": "Jwt expired"
+                    }
+                  },
+                  "token undefined": {
+                    "value": {
+                      "message": "Jwt not found"
                     }
                   }
                 }
@@ -283,13 +303,37 @@
             }
           },
           "400": {
-            "description": "This error occurs when an invalid risk is entered as a parameter.",
+            "description": "This error occurs when an invalid risk is entered as a parameter, or when the auth token does not exist or is invalid.",
             "content": {
               "application/json": {
                 "examples": {
                   "risk not exists": {
                     "value": {
                       "message": "Risk does not exist."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This error occurs when a non-admin employee tries to access this route, or when the auth token does not exist or is invalid.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "non admin employee": {
+                    "value": {
+                      "message": "Only admins are allowed to access this route."
+                    }
+                  },
+                  "token expired": {
+                    "value": {
+                      "message": "Jwt expired"
+                    }
+                  },
+                  "token undefined": {
+                    "value": {
+                      "message": "Jwt not found"
                     }
                   }
                 }
@@ -400,6 +444,30 @@
                         "CEP is not valid",
                         "UF is not valid"
                       ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This error occurs when a non-admin employee tries to access this route, or when the auth token does not exist or is invalid.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "non admin employee": {
+                    "value": {
+                      "message": "Only admins are allowed to access this route."
+                    }
+                  },
+                  "token expired": {
+                    "value": {
+                      "message": "Jwt expired"
+                    }
+                  },
+                  "token undefined": {
+                    "value": {
+                      "message": "Jwt not found"
                     }
                   }
                 }
@@ -524,6 +592,296 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "This error occurs when a non-admin employee tries to access this route, or when the auth token does not exist or is invalid.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "non admin employee": {
+                    "value": {
+                      "message": "Only admins are allowed to access this route."
+                    }
+                  },
+                  "token expired": {
+                    "value": {
+                      "message": "Jwt expired"
+                    }
+                  },
+                  "token undefined": {
+                    "value": {
+                      "message": "Jwt not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/clients/{id}": {
+      "patch": {
+        "description": "Route to update client.<br><br>In the request body of this route, put only the data that will be updated.",
+        "tags": ["Admin"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Client identification",
+            "required": true
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateClientRequest"
+              },
+              "examples": {
+                "client": {
+                  "value": {
+                    "name": "John Doe 2",
+                    "data": {
+                      "cpf": "892.762.670-26",
+                      "birthday": "10/10/2012",
+                      "gender": "F",
+                      "mobile": "(89) 4184-1510",
+                      "street": "Nowhere St. Pedro",
+                      "number": "15",
+                      "complement": "apt. 9990",
+                      "zip": "06310-320",
+                      "city": "San Angels Del Atacama",
+                      "state": "DF"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful client update.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "client": {
+                    "value": {
+                      "data": {
+                        "state": "DF",
+                        "city": "San Angels Del Atacama",
+                        "zip": "06310-320",
+                        "complement": "apt. 9990",
+                        "number": "15",
+                        "street": "Nowhere St. Pedro",
+                        "mobile": "(89) 4184-1510",
+                        "email": "johndoe@email.com",
+                        "gender": "F",
+                        "birthday": "10/10/2012",
+                        "cpf": "892.762.670-26"
+                      },
+                      "subscription": "1432193",
+                      "name": "John Doe 2",
+                      "id": "50ce3967-4966-485e-9876-5eae0bbb3e06"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "This error happens when some field is not passed or is passed in an invalid way",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "CPF || CEP || UF not valid": {
+                    "value": {
+                      "error": [
+                        "CPF is not valid",
+                        "CEP is not valid",
+                        "UF is not valid"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This error occurs when a non-admin employee tries to access this route, or when the auth token does not exist or is invalid.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "non admin employee": {
+                    "value": {
+                      "message": "Only admins are allowed to access this route."
+                    }
+                  },
+                  "token expired": {
+                    "value": {
+                      "message": "Jwt expired"
+                    }
+                  },
+                  "token undefined": {
+                    "value": {
+                      "message": "Jwt not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/employees/{id}": {
+      "patch": {
+        "description": "Route to update employee.<br><br>In the request body of this route, put only the data that will be updated.",
+        "tags": ["Admin"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Employee identification",
+            "required": true
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEmployeeRequest"
+              },
+              "examples": {
+                "client": {
+                  "value": {
+                    "name": "Sigmund Freud",
+                    "password": "123456",
+                    "job": "Doctor",
+                    "specialty": "Psychiatry",
+                    "data": {
+                      "cpf": "724.503.020-00",
+                      "birthday": "10/10/2010",
+                      "gender": "M",
+                      "mobile": "(11) 99999-9999",
+                      "street": "Nowhere St.",
+                      "number": "1",
+                      "complement": "apt. 999",
+                      "zip": "06990-990",
+                      "city": "San Angels",
+                      "state": "SP"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful client update.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "client": {
+                    "value": {
+                      "data": {
+                        "state": "DF",
+                        "city": "San Angels Del Atacama",
+                        "zip": "06310-320",
+                        "complement": "apt. 9990",
+                        "number": "15",
+                        "street": "Nowhere St. Pedro",
+                        "mobile": "(89) 4184-1510",
+                        "email": "johndoe@email.com",
+                        "gender": "F",
+                        "birthday": "10/10/2012",
+                        "cpf": "892.762.670-26"
+                      },
+                      "subscription": "1432193",
+                      "name": "John Doe 2",
+                      "id": "50ce3967-4966-485e-9876-5eae0bbb3e06"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "This error happens when some field is passed in an invalid way",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "CPF || CEP || UF not valid": {
+                    "value": {
+                      "error": [
+                        "CPF is not valid",
+                        "CEP is not valid",
+                        "UF is not valid"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This error occurs when a non-admin employee tries to access this route, or when the auth token does not exist or is invalid.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "non admin employee": {
+                    "value": {
+                      "message": "Only admins are allowed to access this route."
+                    }
+                  },
+                  "token expired": {
+                    "value": {
+                      "message": "Jwt expired"
+                    }
+                  },
+                  "token undefined": {
+                    "value": {
+                      "message": "Jwt not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "This error occurs when a disallowed value is passed for a specific field.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "job not allowed": {
+                    "value": {
+                      "message": {
+                        "error": "Job not allowed",
+                        "allowed_values": ["Doctor", "Nurse", "Admin"]
+                      }
+                    }
+                  },
+                  "specialty not allowed": {
+                    "value": {
+                      "message": {
+                        "error": "Specialty not allowed",
+                        "allowed_values": ["Psychiatry", "Attendant", "Admin"]
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -614,6 +972,51 @@
               "birthday": { "type": "string" },
               "gender": { "type": "string" },
               "email": { "type": "string" },
+              "mobile": { "type": "string" },
+              "street": { "type": "string" },
+              "number": { "type": "string" },
+              "complement": { "type": "string" },
+              "zip": { "type": "string" },
+              "city": { "type": "string" },
+              "state": { "type": "string" }
+            }
+          }
+        }
+      },
+      "UpdateClientRequest": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "cpf": { "type": "string" },
+              "birthday": { "type": "string" },
+              "gender": { "type": "string" },
+              "mobile": { "type": "string" },
+              "street": { "type": "string" },
+              "number": { "type": "string" },
+              "complement": { "type": "string" },
+              "zip": { "type": "string" },
+              "city": { "type": "string" },
+              "state": { "type": "string" }
+            }
+          }
+        }
+      },
+      "UpdateEmployeeRequest": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "password": { "type": "string" },
+          "job": { "type": "string" },
+          "specialty": { "type": "string" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "cpf": { "type": "string" },
+              "birthday": { "type": "string" },
+              "gender": { "type": "string" },
               "mobile": { "type": "string" },
               "street": { "type": "string" },
               "number": { "type": "string" },
