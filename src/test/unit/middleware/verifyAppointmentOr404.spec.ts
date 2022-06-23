@@ -11,6 +11,7 @@ import {
 } from "../../../repositories";
 import { dataRepo, clientRepo, employeeRepo } from "../../../repositories";
 import { QueryMhRisk } from "../../../entities";
+import { v4 as uuid } from "uuid";
 
 describe("Verify Appointment or 404 - Middleware | Unit tests", () => {
   const req: Partial<Request> = { params: {} };
@@ -99,13 +100,13 @@ describe("Verify Appointment or 404 - Middleware | Unit tests", () => {
 
   it("Error 404: When appointment is not found", async () => {
     const res = response();
-    req.params = { id: "8bda12b8-cd55-4823-8204-937ccd4e3d5j" };
+    req.params = { id: uuid() };
 
     try {
       const result: any = await verifyAppointmentOr404(
         req as Request,
         res as Response,
-        next
+        next,
       );
     } catch (err) {
       expect(err).toBeInstanceOf(ErrorHandler);
@@ -157,7 +158,7 @@ describe("Verify Appointment or 404 - Middleware | Unit tests", () => {
       const result: any = await verifyAppointmentOr404(
         req as Request,
         resp as Response,
-        next
+        next,
       );
 
       expect(req).toHaveProperty("appointment");

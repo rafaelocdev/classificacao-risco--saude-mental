@@ -7,7 +7,7 @@ import { validate } from "uuid";
 const verifyUserByIdOr404 = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const { id } = req.params;
 

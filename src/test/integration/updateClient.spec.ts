@@ -4,6 +4,7 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../data-source";
 import app from "../../app";
 import { adminService } from "../../services";
+import { v4 as uuid } from "uuid";
 
 const newEmployee1 = {
   name: "admin",
@@ -62,7 +63,7 @@ const loginNotAdm = {
 let tokenAdmin = "";
 let tokenNotAdmin = "";
 
-const idNotExisting = "64ee7c40-c8ef-4f6a-bfz5-5fe978a371ef";
+const idNotExisting = uuid();
 let idNewClient1 = "";
 
 const newClient1 = {
@@ -197,7 +198,7 @@ describe("Testing the client update route", () => {
 
     expect(response.status).toBe(403);
     expect(response.body.message).toStrictEqual(
-      "Only admins are allowed to access this route."
+      "Only admins are allowed to access this route.",
     );
   });
 

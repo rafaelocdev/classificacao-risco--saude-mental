@@ -4,6 +4,7 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import { verifyUserByIdOr404 } from "../../../middlewares";
 import { dataRepo, clientRepo } from "../../../repositories";
+import { v4 as uuid } from "uuid";
 
 describe("Verify User by ID or 404 - Middleware | Unit tests", () => {
   const req: Partial<Request> = { params: {} };
@@ -50,14 +51,17 @@ describe("Verify User by ID or 404 - Middleware | Unit tests", () => {
 
   it("Error 404: When user is not found", async () => {
     const res = response();
-    req.params = { id: "8bda12b8-cd55-4823-8204-937ccd4e3d5j" };
+    req.params = { id: uuid() };
 
     try {
       const result: any = await verifyUserByIdOr404(
         req as Request,
         res as Response,
-        next
+        next,
       );
+      console.log("\n\n\n\n");
+      console.log(result);
+      console.log("\n\n\n\n");
     } catch (err) {
       expect(err).toBeInstanceOf(ErrorHandler);
       expect(err.statusCode).toBe(404);
@@ -80,7 +84,7 @@ describe("Verify User by ID or 404 - Middleware | Unit tests", () => {
     const result: any = await verifyUserByIdOr404(
       req as Request,
       resp as Response,
-      next
+      next,
     );
 
     expect(req).toHaveProperty("user");
