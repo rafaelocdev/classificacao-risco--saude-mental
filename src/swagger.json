@@ -18,7 +18,7 @@
   "paths": {
     "/login": {
       "post": {
-        "description": "Rota para login qualquer tipo de funcionário",
+        "description": "Login route to any employee",
         "tags": ["Login"],
         "requestBody": {
           "content": {
@@ -51,7 +51,7 @@
         },
         "responses": {
           "400": {
-            "description": "Este erro ocorre quando algum campo necessário não é enviado no body da requisição ou o tipo de dado de algum campo é diferente do esperado, veja o schema do body.",
+            "description": "This error occurs when some required field is not sent in the body of the request or the data type of some field is different than expected, see the body schema.",
             "content": {
               "application/json": {
                 "schema": {
@@ -78,7 +78,7 @@
             }
           },
           "401": {
-            "description": "Este erro ocorre quando as credenciais enviadas são inválidas.",
+            "description": "This error occurs when the submitted credentials are invalid.",
             "content": {
               "application/json": {
                 "schema": {
@@ -95,7 +95,7 @@
             }
           },
           "200": {
-            "description": "Login realizado com sucesso",
+            "description": "Login successfully.",
             "content": {
               "application/json": {
                 "schema": {
@@ -275,27 +275,27 @@
                 "examples": {
                   "grave": {
                     "value": {
-                      "procedure": "Priority targeting, immediate clinical care."
+                      "procedure": "Direcionamento prioritário, atendimento clínico imediato."
                     }
                   },
-                  "elevated": {
+                  "elevado": {
                     "value": {
-                      "procedure": "Immediate classification, clinical care without immediate risk of life."
+                      "procedure": "classificação imediata, atendimento clínico sem risco imediato de vida."
                     }
                   },
-                  "moderated": {
+                  "moderado": {
                     "value": {
-                      "procedure": "Treatment at CAPS and outpatient clinic specializing in mental health."
+                      "procedure": "Tratamento no CAPS ou ambulatório especializado em saúde mental."
                     }
                   },
-                  "low": {
+                  "baixo": {
                     "value": {
-                      "procedure": "Care in the primary health care network."
+                      "procedure": "Atendimento na rede de atenção primária à saúde."
                     }
                   },
-                  "nonspecific": {
+                  "inespecífico": {
                     "value": {
-                      "procedure": "No need for medical attention."
+                      "procedure": "Sem necessidade de atendimento pela rede de saúde."
                     }
                   }
                 }
@@ -949,6 +949,450 @@
                   "token undefined": {
                     "value": {
                       "message": "Jwt not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/appointments": {
+      "get": {
+        "description": "Route to appointment listing",
+        "tags": ["Doctor"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Listing successful appointments",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "appointments list": {
+                    "value": {
+                      "appointments": [
+                        {
+                          "id": "b8fbabb5-cde5-4be9-87f4-5e39c271ace0",
+                          "anamnesis": null,
+                          "action": null,
+                          "onDuty": null,
+                          "queryMhRisk": {
+                            "id": "b90eba7f-6b3f-4ef5-8269-8ae8d42610d5",
+                            "depression": "1",
+                            "selfAggression": true,
+                            "insomnia": true,
+                            "drugs": true,
+                            "mourning": true,
+                            "familySupport": true,
+                            "evaluationDate": "2022-06-23T14:48:12.466Z",
+                            "client": {
+                              "id": "4800b450-be38-4c98-b0ee-2b7452897629",
+                              "name": "John Doe",
+                              "subscription": "23847628472",
+                              "data": {
+                                "id": "84da0819-c11a-4384-bcab-568c70c4ed04",
+                                "cpf": "435.818.260-70",
+                                "birthday": "10/10/2010",
+                                "gender": "M",
+                                "email": "johndoeclient@email.com",
+                                "mobile": "(11) 99999-1506",
+                                "street": "Nowhere St.",
+                                "number": "1",
+                                "complement": "apt. 999",
+                                "zip": "06999-999",
+                                "city": "San Angels",
+                                "state": "SP"
+                              }
+                            },
+                            "resultMhRisk": {
+                              "risk": "grave",
+                              "procedure": "Direcionamento prioritário, atendimento clínico imediato."
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This error occurs when a non-doctor employee tries to access this route, or when the auth token does not exist or is invalid.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "non doctor employee": {
+                    "value": {
+                      "message": "Only doctors are allowed to access this route."
+                    }
+                  },
+                  "token expired": {
+                    "value": {
+                      "message": "Jwt expired"
+                    }
+                  },
+                  "token undefined": {
+                    "value": {
+                      "message": "Jwt not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/appointments/start/{id}": {
+      "patch": {
+        "description": "Route to start appointment",
+        "tags": ["Doctor"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Appointment identification",
+            "required": true
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful appointment start.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "appointment started": {
+                    "value": {
+                      "appointment": {
+                        "query_mh_risk": {
+                          "resultMhRisk": "grave",
+                          "evaluation_ate": "2022-06-23T14:48:12.466Z",
+                          "family_support": true,
+                          "mourning": true,
+                          "drugs": true,
+                          "insomnia": true,
+                          "self_aggression": true,
+                          "id": "b90eba7f-6b3f-4ef5-8269-8ae8d42610d5"
+                        },
+                        "doctor": {
+                          "id": "1cdca3d1-8531-426c-8d33-3768a08638f5",
+                          "name": "Sigmund Freud 2",
+                          "specialty": "Psiquiatria"
+                        },
+                        "action": null,
+                        "anamnesis": null,
+                        "id": "b8fbabb5-cde5-4be9-87f4-5e39c271ace0"
+                      },
+                      "subscription": "23847628472",
+                      "client": "John Doe",
+                      "id": "4800b450-be38-4c98-b0ee-2b7452897629"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "This error occurs when an invalid uuid parameter is sent.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "invalid uuid": {
+                    "value": {
+                      "message": "Invalid uuid."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This error occurs when a non-doctor employee tries to access this route, or when the auth token does not exist or is invalid.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "non doctor employee": {
+                    "value": {
+                      "message": "Only doctors are allowed to access this route."
+                    }
+                  },
+                  "token expired": {
+                    "value": {
+                      "message": "Jwt expired"
+                    }
+                  },
+                  "token undefined": {
+                    "value": {
+                      "message": "Jwt not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "This error occurs when appointment is not found.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "not found": {
+                    "value": {
+                      "message": "Appointment not found."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "This error occurs when appointment is already started or finished.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "already started": {
+                    "value": {
+                      "message": "Appointment was already started."
+                    }
+                  },
+                  "already finished": {
+                    "value": {
+                      "message": "Appointment was already finished."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/appointments/finish/{id}": {
+      "patch": {
+        "description": "Route to finish appointment",
+        "tags": ["Doctor"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Appointment identification",
+            "required": true
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful appointment start.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "appointment started": {
+                    "value": {
+                      "appointment": {
+                        "query_mh_risk": {
+                          "result_mh_risk": "grave",
+                          "evaluation_date": "Thu Jun 23 2022 14:48:12 GMT+0000 (Coordinated Universal Time)",
+                          "family_support": true,
+                          "mourning": true,
+                          "drugs": true,
+                          "insomnia": true,
+                          "self_aggression": true,
+                          "depression": "1",
+                          "id": "b90eba7f-6b3f-4ef5-8269-8ae8d42610d5"
+                        },
+                        "doctor": {
+                          "id": "1cdca3d1-8531-426c-8d33-3768a08638f5",
+                          "name": "Sigmund Freud 2",
+                          "specialty": "Psiquiatria"
+                        },
+                        "action": "Camisa de força",
+                        "anamnesis": "Paciente completamente louco",
+                        "id": "b8fbabb5-cde5-4be9-87f4-5e39c271ace0"
+                      },
+                      "subscription": "23847628472",
+                      "client": "John Doe",
+                      "id": "4800b450-be38-4c98-b0ee-2b7452897629"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "This error occurs when an invalid uuid parameter is sent.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "invalid uuid": {
+                    "value": {
+                      "message": "Invalid uuid."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This error occurs when a non-doctor employee tries to access this route, or when the auth token does not exist or is invalid.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "non doctor employee": {
+                    "value": {
+                      "message": "Only doctors are allowed to access this route."
+                    }
+                  },
+                  "token expired": {
+                    "value": {
+                      "message": "Jwt expired"
+                    }
+                  },
+                  "token undefined": {
+                    "value": {
+                      "message": "Jwt not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "This error occurs when appointment is not found.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "not found": {
+                    "value": {
+                      "message": "Appointment not found."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/query-mh-risk/{id}": {
+      "patch": {
+        "description": "Start query with client and create appointment if necessary",
+        "tags": ["Nurse"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Query mental health risk identification",
+            "required": true
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful query start.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "created query and started appointment": {
+                    "value": {
+                      "resultMhRisk": {
+                        "risk": "grave",
+                        "procedure": "Direcionamento prioritário, atendimento clínico imediato."
+                      },
+                      "evaluationDate": "2022-06-23T15:41:59.998Z",
+                      "familySupport": true,
+                      "mourning": true,
+                      "drugs": true,
+                      "insomnia": true,
+                      "selfAggression": true,
+                      "depression": 1,
+                      "client": {
+                        "name": "John Doe",
+                        "id": "4800b450-be38-4c98-b0ee-2b7452897629"
+                      },
+                      "id": "9e1329c0-a201-434d-b144-0783fdaa7572"
+                    }
+                  },
+                  "only query created": {
+                    "value": {
+                      "resultMhRisk": {
+                        "risk": "baixo",
+                        "procedure": "Atendimento na rede de atenção primária à saúde"
+                      },
+                      "evaluationDate": "2022-06-23T15:47:59.749Z",
+                      "familySupport": true,
+                      "mourning": true,
+                      "drugs": true,
+                      "insomnia": true,
+                      "selfAggression": false,
+                      "depression": 3,
+                      "client": {
+                        "name": "John Doe",
+                        "id": "4800b450-be38-4c98-b0ee-2b7452897629"
+                      },
+                      "id": "62d4ba0c-04c0-4540-babb-5bc719b9a807"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "This error occurs when an invalid uuid parameter is sent.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "invalid uuid": {
+                    "value": {
+                      "message": "Invalid uuid."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This error occurs when a non-doctor employee tries to access this route, or when the auth token does not exist or is invalid.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "non nurse employee": {
+                    "value": {
+                      "message": "Only nurses are allowed to access this route"
+                    }
+                  },
+                  "token expired": {
+                    "value": {
+                      "message": "Jwt expired"
+                    }
+                  },
+                  "token undefined": {
+                    "value": {
+                      "message": "Jwt not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "This error occurs when client is not found.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "not found": {
+                    "value": {
+                      "message": "User not found."
                     }
                   }
                 }
