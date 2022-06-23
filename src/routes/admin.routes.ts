@@ -22,11 +22,16 @@ adminRouter.post(
   validateToken,
   validateIsAdmin,
   validateSchema(registerEmployeeSchema),
-  adminController.registerEmployee,
+  adminController.registerEmployee
 );
 
 // Listar funcionarios
-adminRouter.get("/employees", adminController.getAllEmployees);
+adminRouter.get(
+  "/employees",
+  validateToken,
+  validateIsAdmin,
+  adminController.getAllEmployees
+);
 
 // Alterar funcionarios
 adminRouter.patch(
@@ -44,7 +49,7 @@ adminRouter.post(
   validateToken,
   validateIsAdmin,
   validateSchema(registerClientSchema),
-  adminController.registerClient,
+  adminController.registerClient
 );
 
 // Listar clientes
@@ -57,7 +62,7 @@ adminRouter.patch(
   validateIsAdmin,
   validateSchema(updateClientSchema),
   verifyUserByIdOr404,
-  adminController.updateClient,
+  adminController.updateClient
 );
 
 // Deletar clientes
@@ -65,7 +70,7 @@ adminRouter.delete(
   "/clients/:clientId",
   validateToken,
   validateIsAdmin,
-  adminController.deleteClient,
+  adminController.deleteClient
 );
 
 // Listar procedimentos
