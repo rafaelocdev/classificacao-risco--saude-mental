@@ -3,12 +3,14 @@ import doctorRouter from "./doctor.routes";
 import nurseRouter from "./nurse.routes";
 import { Express, Request, Response } from "express";
 import loginRouter from "./login.routes";
+import docRouter from "./doc.routes";
 
 const registerRoutes = (app: Express) => {
   app.use("/admin", adminRouter);
   app.use("", doctorRouter);
   app.use("", nurseRouter);
   app.use(loginRouter);
+  app.use("/doc", docRouter);
 
   // all invalid routes fall into this
   app.all("*", (_: Request, res: Response) => {

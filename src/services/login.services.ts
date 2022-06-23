@@ -27,11 +27,11 @@ class LoginService {
     }
 
     const token = jwt.sign(
-      { id: employee.id, email: data.email },
+      { id: employee.id, email: data.email, job: employee.job },
       process.env.SECRET_KEY,
       {
         expiresIn: process.env.EXPIRES_IN,
-      }
+      },
     );
 
     return token;
