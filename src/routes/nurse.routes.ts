@@ -2,7 +2,7 @@ import { Router } from "express";
 import validateSchema from "../middlewares/validateSchema.middleware";
 import { nurseController } from "../controller";
 import { createQueryMhRiskSchema } from "../schemas";
-import { validateToken } from "../middlewares";
+import { validateToken, verifyUserByIdOr404 } from "../middlewares";
 import validateIsNurse from "../middlewares/validateIsNurse.middlewares";
 
 const nurseRouter = Router();
@@ -12,8 +12,9 @@ nurseRouter.post(
   "/query-mh-risk/:id",
   validateToken,
   validateIsNurse,
+  verifyUserByIdOr404,
   validateSchema(createQueryMhRiskSchema),
-  nurseController.createQueryMhRisk,
+  nurseController.createQueryMhRisk
 );
 
 export default nurseRouter;
