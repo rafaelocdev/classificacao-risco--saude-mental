@@ -13,6 +13,7 @@ import {
   serializedClient,
   serializedClientWithAppointments,
   serializeAppointmentSchema,
+  serializedFinishedAppointmentSchema,
 } from "../schemas";
 
 interface IClientById {
@@ -62,8 +63,6 @@ class DoctorService {
     });
   };
 
-  finishAppointment = async ({ appointment }: Request) => {};
-
   startAppointment = async ({ decoded, appointment }: Request) => {
     const { id } = decoded;
 
@@ -111,12 +110,58 @@ class DoctorService {
         anamnesis: anamnesis,
         id: appointmentId,
       },
-      subscription: (await queryMhRisk.client).subscription,
-      client: (await queryMhRisk.client).name,
-      id: (await queryMhRisk.client).id,
+      subscription: queryMhRisk.client.subscription,
+      client: queryMhRisk.client.name,
+      id: queryMhRisk.client.id,
     };
 
     return response;
+  };
+  finishAppointment = async ({ appointment, validated }: Request) => {
+    let objReturn = {};
+
+    try {
+      await appointmentRepo.update(appointment.id, { ...validated });
+
+      await onDutyRepo.update(appointment.onDuty.id, { onDuty: false });
+
+      const updatedAppointment = await appointmentRepo.listOne({
+        id: appointment.id,
+      });
+
+      objReturn = {
+        id: updatedAppointment.queryMhRisk.client.id,
+        client: updatedAppointment.queryMhRisk.client.name,
+        subscription: updatedAppointment.queryMhRisk.client.subscription,
+        appointment: {
+          id: updatedAppointment.id,
+          anamnesis: updatedAppointment.anamnesis,
+          action: updatedAppointment.action,
+          doctor: {
+            id: updatedAppointment.onDuty.employee.id,
+            name: updatedAppointment.onDuty.employee.name,
+            specialty: updatedAppointment.onDuty.employee.specialty,
+          },
+          query_mh_risk: {
+            id: updatedAppointment.queryMhRisk.id,
+            depression: updatedAppointment.queryMhRisk.depression,
+            self_aggression: updatedAppointment.queryMhRisk.selfAggression,
+            insomnia: updatedAppointment.queryMhRisk.insomnia,
+            drugs: updatedAppointment.queryMhRisk.drugs,
+            mourning: updatedAppointment.queryMhRisk.mourning,
+            family_support: updatedAppointment.queryMhRisk.familySupport,
+            evaluation_date: updatedAppointment.queryMhRisk.evaluationDate,
+            result_mh_risk: updatedAppointment.queryMhRisk.resultMhRisk.risk,
+          },
+        },
+      };
+    } catch (err) {
+      throw new ErrorHandler(400, err);
+    }
+
+    return serializedFinishedAppointmentSchema.validate(objReturn, {
+      stripUnknown: true,
+    });
   };
 }
 

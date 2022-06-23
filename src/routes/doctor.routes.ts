@@ -5,10 +5,11 @@ import {
   validateToken,
   verifyIfAppointmentHasFinished,
   verifyIfAppointmentHasStarted,
+  verifyAppointmentOr404,
+  validateSchema,
 } from "../middlewares";
 
-// middleware
-import { verifyAppointmentOr404 } from "../middlewares";
+import { finishAppointmentSchema } from "../schemas";
 
 const doctorRouter = Router();
 
@@ -30,8 +31,14 @@ doctorRouter.patch(
   doctorController.appointmentStart,
 );
 
-// Finaliza atendimento => patch com anamnesi e action -> Modificar on_duty para false
+// Finaliza atendimento => patch com anamnesis e action -> Modificar on_duty para false
 // Validar campos com schema específico
-doctorRouter.patch("/appointments/finish/:id", verifyAppointmentOr404);
+doctorRouter.patch(
+  "/appointments/finish/:id",
+  validateToken,
+  verifyAppointmentOr404,
+  validateSchema(finishAppointmentSchema),
+  doctorController.finishAppointment,
+);
 
 export default doctorRouter;

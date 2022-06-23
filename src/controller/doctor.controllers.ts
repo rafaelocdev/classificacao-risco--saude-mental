@@ -21,6 +21,12 @@ class DoctorController {
 
     return res.status(201).json({ ...startedAppointment });
   };
+
+  finishAppointment = async (req: Request, res: Response) => {
+    const updatedAppointment = await doctorService.finishAppointment(req);
+
+    return res.status(200).json(updatedAppointment);
+  };
 }
 
 export default new DoctorController();
