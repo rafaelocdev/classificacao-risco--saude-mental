@@ -26,7 +26,12 @@ adminRouter.post(
 );
 
 // Listar funcionarios
-adminRouter.get("/employees", adminController.getAllEmployees);
+adminRouter.get(
+  "/employees",
+  validateToken,
+  validateIsAdmin,
+  adminController.getAllEmployees
+);
 
 // Alterar funcionarios
 adminRouter.patch(

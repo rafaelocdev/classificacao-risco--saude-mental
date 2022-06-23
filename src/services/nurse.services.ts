@@ -1,19 +1,30 @@
 import { Request } from "express";
 import { validate } from "uuid";
 import { AssertsShape } from "yup/lib/object";
-import { Client, QueryMhRisk, ResultMhRisk } from "../entities";
+import { Appointment, Client, QueryMhRisk, ResultMhRisk } from "../entities";
 import { ErrorHandler } from "../errors/errors";
-import { clientRepo, queryMhRiskRepo, resultMhRiskRepo } from "../repositories";
+import {
+  appointmentRepo,
+  clientRepo,
+  queryMhRiskRepo,
+  resultMhRiskRepo,
+} from "../repositories";
 import { serializedQueryMhRiskSchema } from "../schemas";
 
 export class nurseService {
+  private createAppointment = async (object: QueryMhRisk) => {
+    const newAppointment = new Appointment();
+
+    newAppointment.queryMhRisk = object;
+
+    await appointmentRepo.create(newAppointment);
+  };
+
   createQueryMhRisk = async ({
     validated,
     params,
     decoded,
   }: Request): Promise<AssertsShape<any>> => {
-    console.log(validated);
-
     if (!params.id) {
       throw new ErrorHandler(400, "Client id is required");
     }
@@ -38,6 +49,14 @@ export class nurseService {
       newQuery.resultMhRisk = await resultMhRiskRepo.findOneBy({
         risk: "grave",
       });
+
+      await queryMhRiskRepo.save(newQuery);
+
+      await this.createAppointment(newQuery);
+
+      return serializedQueryMhRiskSchema.validate(newQuery, {
+        stripUnknown: true,
+      });
     }
 
     if (
@@ -47,6 +66,14 @@ export class nurseService {
       console.log("Elevado");
       newQuery.resultMhRisk = await resultMhRiskRepo.findOneBy({
         risk: "elevado",
+      });
+
+      await queryMhRiskRepo.save(newQuery);
+
+      await this.createAppointment(newQuery);
+
+      return serializedQueryMhRiskSchema.validate(newQuery, {
+        stripUnknown: true,
       });
     }
 
@@ -61,12 +88,24 @@ export class nurseService {
       newQuery.resultMhRisk = await resultMhRiskRepo.findOneBy({
         risk: "baixo",
       });
+
+      await queryMhRiskRepo.save(newQuery);
+
+      return serializedQueryMhRiskSchema.validate(newQuery, {
+        stripUnknown: true,
+      });
     }
 
     if ((validated as QueryMhRisk).depression == "2") {
       console.log("Moderado");
       newQuery.resultMhRisk = await resultMhRiskRepo.findOneBy({
         risk: "moderado",
+      });
+
+      await queryMhRiskRepo.save(newQuery);
+
+      return serializedQueryMhRiskSchema.validate(newQuery, {
+        stripUnknown: true,
       });
     }
 
@@ -81,15 +120,13 @@ export class nurseService {
       newQuery.resultMhRisk = await resultMhRiskRepo.findOneBy({
         risk: "inespecífico",
       });
+
+      await queryMhRiskRepo.save(newQuery);
+
+      return serializedQueryMhRiskSchema.validate(newQuery, {
+        stripUnknown: true,
+      });
     }
-
-    await queryMhRiskRepo.save(newQuery);
-
-    console.log(newQuery);
-
-    return serializedQueryMhRiskSchema.validate(newQuery, {
-      stripUnknown: true,
-    });
   };
 }
 
