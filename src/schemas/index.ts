@@ -6,6 +6,7 @@ import {
   serializedData,
   serializedUpdatedClientSchema,
   updateClientSchema,
+  updateEmployeeSchema,
 } from "./admin";
 import { serializedClient, serializedClientWithAppointments } from "./doctor";
 import { loginSchema } from "./login";
@@ -13,6 +14,10 @@ import {
   finishAppointmentSchema,
   serializedFinishedAppointmentSchema,
 } from "./doctor";
+import {
+  createQueryMhRiskSchema,
+  serializedQueryMhRiskSchema,
+} from "./nurse/queryMhRisk.schema";
 
 export {
   getAllEmployeesSchema,
@@ -27,4 +32,7 @@ export {
   loginSchema,
   finishAppointmentSchema,
   serializedFinishedAppointmentSchema,
+  createQueryMhRiskSchema,
+  serializedQueryMhRiskSchema,
+  updateEmployeeSchema,
 };

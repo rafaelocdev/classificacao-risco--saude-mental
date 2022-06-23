@@ -95,8 +95,6 @@ describe("Testing the Doctor services | Unit tests", () => {
   });
 
   test("Should be able to update an appointment, finishing it.", async () => {
-    const doctor = new doctorService();
-
     try {
       const createdClient = await adminService.registerClient({
         validated: newClient,
@@ -133,7 +131,7 @@ describe("Testing the Doctor services | Unit tests", () => {
 
       appointmentId = createdAppointment.id;
 
-      const finishedAppointment = await doctor.finishAppointment({
+      const finishedAppointment = await doctorService.finishAppointment({
         appointment: createdAppointment,
         validated: dataFinishAppointment,
       } as Request);
@@ -144,7 +142,7 @@ describe("Testing the Doctor services | Unit tests", () => {
       expect(finishedAppointment.appointment.id).toStrictEqual(appointmentId);
       expect(finishedAppointment.appointment).toHaveProperty("action");
       expect(finishedAppointment.appointment.action).toStrictEqual(
-        dataFinishAppointment.action
+        dataFinishAppointment.action,
       );
     } catch (err) {
       console.error(err);

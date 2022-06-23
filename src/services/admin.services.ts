@@ -2,7 +2,12 @@ import { Request } from "express";
 import { AssertsShape } from "yup/lib/object";
 import bcrypt from "bcrypt";
 
-import { employeeRepo, clientRepo, dataRepo } from "../repositories";
+import {
+  employeeRepo,
+  clientRepo,
+  dataRepo,
+  resultMhRiskRepo,
+} from "../repositories";
 import { Client, Data, Employee } from "../entities";
 import {
   serializedData,
@@ -11,6 +16,7 @@ import {
   serializeEmployeeData,
 } from "../schemas";
 import { ErrorHandler } from "../errors/errors";
+import { serializedUpdatedEmployeeSchema } from "../schemas/admin";
 
 interface IReceivedUserData {
   name: string;
@@ -206,12 +212,110 @@ class AdminService {
     });
   };
 
+  updateEmployee = async ({
+    params,
+    validated,
+  }: Request): Promise<AssertsShape<any>> => {
+    const { id } = params;
+
+    const employee = await employeeRepo.findOneBy({ id });
+
+    let { name, password, register, job, specialty, isActive, data } =
+      validated as Partial<Employee>;
+
+    if (password) {
+      const hashedPwd = await bcrypt.hash(password, 10);
+      (validated as Partial<Employee>).password = hashedPwd;
+    }
+
+    if (register) {
+      const registerAlreadyExists = await employeeRepo.findOneBy({
+        register,
+      });
+
+      if (registerAlreadyExists)
+        throw new ErrorHandler(409, "Register number already exists.");
+    }
+
+    if (job) {
+      const ALLOWED_JOBS = ["Médico(a)", "Enfermeiro(a)", "Administrador(a)"];
+
+      if (!ALLOWED_JOBS.includes(job))
+        throw new ErrorHandler(409, {
+          error: "Job not allowed",
+          allowed_values: ALLOWED_JOBS,
+        });
+    }
+
+    if (specialty) {
+      const ALLOWED_SPECIALTIES = ["Psiquiatra", "Atendente", "Admin"];
+
+      if (!ALLOWED_SPECIALTIES.includes(specialty))
+        throw new ErrorHandler(409, {
+          error: "Specialty not allowed",
+          allowed_values: ALLOWED_SPECIALTIES,
+        });
+    }
+
+    if (isActive) {
+      if (typeof isActive !== "boolean")
+        throw new ErrorHandler(409, "Only boolean types are allowed");
+    }
+
+    if (data) {
+      if (data.cpf) {
+        const cpfAlreadyRegistered = await dataRepo.findOneBy({
+          cpf: data.cpf,
+        });
+
+        if (cpfAlreadyRegistered)
+          throw new ErrorHandler(409, "CPF already registered.");
+      }
+
+      if (data.email) {
+        const emailAlreadyRegistered = await dataRepo.findOneBy({
+          email: data.email,
+        });
+
+        if (emailAlreadyRegistered)
+          throw new ErrorHandler(409, "Email already registered.");
+      }
+
+      await dataRepo.update(employee.data.id, { ...data });
+    }
+
+    if (name || password || register || job || specialty || isActive) {
+      const employeeData: Partial<Employee> = { ...validated };
+
+      if (employeeData.data) delete employeeData.data;
+
+      await employeeRepo.update(employee.id, {
+        ...employeeData,
+      });
+    }
+
+    const updatedEmployee = await employeeRepo.findOneBy({ id });
+
+    return await serializedUpdatedEmployeeSchema.validate(updatedEmployee, {
+      stripUnknown: true,
+    });
+  };
+
   getAllEmployees = async () => {
     const employees = await employeeRepo.find();
 
     return await getAllEmployeesSchema.validate(employees, {
       stripUnknown: true,
     });
+  };
+
+  getProcedure = async ({ params }: Request) => {
+    try {
+      const procedure = await resultMhRiskRepo.findOneBy(params);
+      return procedure.procedure;
+    } catch {
+      throw new ErrorHandler(400, "Risk does not exist.");
+    }
   };
 }
 

@@ -21,7 +21,13 @@ interface IClientById {
   appointment: Partial<Appointment>;
 }
 
-export default class DoctorService {
+class DoctorService {
+  getAppointments = async () => {
+    const appointments = await appointmentRepo.listAll();
+
+    return appointments;
+  };
+
   getClientById = async ({ params }: Request) => {
     const { clientId } = params;
 
@@ -103,3 +109,5 @@ export default class DoctorService {
     });
   };
 }
+
+export default new DoctorService();
