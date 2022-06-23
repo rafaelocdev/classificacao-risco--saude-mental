@@ -2,7 +2,12 @@ import { Router } from "express";
 import { doctorController } from "../controller";
 
 // middleware
-import { verifyAppointmentOr404 } from "../middlewares";
+import {
+  verifyAppointmentOr404,
+  validateSchema,
+  validateToken,
+} from "../middlewares";
+import { finishAppointmentSchema } from "../schemas";
 
 const doctorRouter = Router();
 
@@ -16,8 +21,14 @@ doctorRouter.get("/appointments", doctorController.getAppointments);
 // Validar campos com schema específico
 doctorRouter.patch("/appointments/start/:id", verifyAppointmentOr404);
 
-// Finaliza atendimento => patch com anamnesi e action -> Modificar on_duty para false
+// Finaliza atendimento => patch com anamnesis e action -> Modificar on_duty para false
 // Validar campos com schema específico
-doctorRouter.patch("/appointments/finish/:id", verifyAppointmentOr404);
+doctorRouter.patch(
+  "/appointments/finish/:id",
+  validateToken,
+  verifyAppointmentOr404,
+  validateSchema(finishAppointmentSchema),
+  doctorController.finishAppointment
+);
 
 export default doctorRouter;
