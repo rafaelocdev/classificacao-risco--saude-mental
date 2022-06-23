@@ -53,7 +53,12 @@ adminRouter.post(
 );
 
 // Listar clientes
-adminRouter.get("/clients", adminController.getClients);
+adminRouter.get(
+  "/clients",
+  validateToken,
+  validateIsAdmin,
+  adminController.getClients
+);
 
 // Alterar clientes
 adminRouter.patch(
@@ -74,7 +79,12 @@ adminRouter.delete(
 );
 
 // Listar procedimentos
-adminRouter.get("/procedures/:risk", adminController.getProcedure);
+adminRouter.get(
+  "/procedures/:risk",
+  validateToken,
+  validateIsAdmin,
+  adminController.getProcedure
+);
 
 // Listar todos onDuty
 // adminRouter.get(
