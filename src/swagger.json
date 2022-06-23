@@ -885,6 +885,78 @@
           }
         }
       }
+    },
+    "/admin/clients/{clientId}": {
+      "delete": {
+        "description": "Route to delete client.",
+        "tags": ["Admin"],
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Client identification",
+            "required": true
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful client delete.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "delete client": {
+                    "value": {
+                      "message": "User deleted successfully!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "This error happens when user not exists or id is invalid",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "invalid id": {
+                    "value": {
+                      "message": "User not found."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This error occurs when a non-admin employee tries to access this route, or when the auth token does not exist or is invalid.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "non admin employee": {
+                    "value": {
+                      "message": "Only admins are allowed to access this route."
+                    }
+                  },
+                  "token expired": {
+                    "value": {
+                      "message": "Jwt expired"
+                    }
+                  },
+                  "token undefined": {
+                    "value": {
+                      "message": "Jwt not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
