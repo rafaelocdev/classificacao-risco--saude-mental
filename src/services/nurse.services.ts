@@ -1,12 +1,25 @@
 import { Request } from "express";
 import { validate } from "uuid";
 import { AssertsShape } from "yup/lib/object";
-import { Client, QueryMhRisk, ResultMhRisk } from "../entities";
+import { Appointment, Client, QueryMhRisk, ResultMhRisk } from "../entities";
 import { ErrorHandler } from "../errors/errors";
-import { clientRepo, queryMhRiskRepo, resultMhRiskRepo } from "../repositories";
+import {
+  appointmentRepo,
+  clientRepo,
+  queryMhRiskRepo,
+  resultMhRiskRepo,
+} from "../repositories";
 import { serializedQueryMhRiskSchema } from "../schemas";
 
 export class nurseService {
+  private createAppointment = async (object: QueryMhRisk) => {
+    const newAppointment = new Appointment();
+
+    newAppointment.queryMhRisk = object;
+
+    await appointmentRepo.create(newAppointment);
+  };
+
   createQueryMhRisk = async ({
     validated,
     params,
@@ -39,6 +52,8 @@ export class nurseService {
 
       await queryMhRiskRepo.save(newQuery);
 
+      await this.createAppointment(newQuery);
+
       return serializedQueryMhRiskSchema.validate(newQuery, {
         stripUnknown: true,
       });
@@ -54,6 +69,8 @@ export class nurseService {
       });
 
       await queryMhRiskRepo.save(newQuery);
+
+      await this.createAppointment(newQuery);
 
       return serializedQueryMhRiskSchema.validate(newQuery, {
         stripUnknown: true,
