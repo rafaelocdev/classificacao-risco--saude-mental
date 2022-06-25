@@ -63,6 +63,14 @@ class DoctorService {
     });
   };
 
+  getOpenAppointments = async () => {
+    const openAppointments = (await this.getAppointments()).filter(
+      (appointment) => appointment.onDuty === null,
+    );
+
+    return openAppointments;
+  };
+
   startAppointment = async ({ decoded, appointment }: Request) => {
     const { id } = decoded;
 

@@ -178,7 +178,7 @@ class AdminService {
 
     const hashedPassword = await bcrypt.hash(
       (validated as Employee).password,
-      10
+      10,
     );
 
     const newEmployeeData = new Data();
@@ -322,6 +322,11 @@ class AdminService {
 
   getAllOnDuty = async () => {
     return await onDutyRepo.findAll();
+  };
+
+  getAvailableDoctors = async () => {
+    return (await this.getAllOnDuty()).filter(({ onDuty }) => !onDuty);
+    // Refatorar usando também o available, após fazer rota de logout
   };
 
   getProcedure = async ({ params }: Request) => {
