@@ -1,9 +1,22 @@
 import { Request, Response } from "express";
 import { adminService } from "../services";
+import mailerService from "../services/mailer.service";
 
 class AdminController {
   registerClient = async (req: Request, res: Response) => {
     const newClient = await adminService.registerClient(req);
+
+    const clientData = {
+      name: "Graham Jordan",
+      cpf: "808.988.660-72",
+      birthday: "Jan 5, 1911",
+      gender: "Male",
+      email: "cubilia.curae.donec@hotmail.com",
+      mobile: "44-34022-4365",
+      address: "823-7594 Vestibulum. Av.",
+    };
+
+    const message = await mailerService.welcomeEmail(clientData);
 
     return res.status(201).json(newClient);
   };

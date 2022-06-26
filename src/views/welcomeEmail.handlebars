@@ -10,25 +10,32 @@
   </head>
   <body>
     <br />
-    <h2>Olá, {{name}}.</h2>
-    <h3>Bem-vindo!</h3>
+    <h2>Hello, {{name}}.</h2>
+    <h3>Welcome!</h3>
     <br />
-    <p>Recebemos seus dados e seu cadastro foi realizado com sucesso!</p>
-    <p>É um prazer ter você como cliente!</p>
-    <p>Agora você está apto a realizar procedimentos de teleatendimento!</p>
+    <p>We received your data and your registration was successful!</p>
+    <p>It's a pleasure to have you as a customer!</p>
+    <p>Thank you for subscribing. Please confirm your email by clicking on the
+      following link</p>
+    <a href="http:" google.com.br>Click here</a>
+    {{! <a href=http://localhost:8081/confirm/${confirmationCode}>Click here</a> }}
     <br />
-    <h4>Confira abaixo suas informações:</h4>
+    <br />
+    <p>After confirmation of the email, you will be able to perform teleservice
+      procedures!</p>
+    <br />
+    <h4>Check your information below:</h4>
     <ul>
-      <li>Nome: {{name}}</li>
+      <li>Name: {{name}}</li>
       <li>CPF: {{cpf}}</li>
-      <li>Data de Nascimento: {{birthday}}</li>
-      <li>Gênero: {{gender}}</li>
+      <li>Birth date: {{birthday}}</li>
+      <li>Genre: {{gender}}</li>
       <li>Email: {{email}}</li>
-      <li>Telefone: {{mobile}}</li>
-      <li>Endereço: {{address}}</li>
+      <li>Phone: {{mobile}}</li>
+      <li>Address: {{address}}</li>
     </ul>
     <br />
-    <p><span>Qualquer divergência nas informações acima, entre em contato com o
-        suporte.</span></p>
+    <p><span>Any discrepancies in the above information, please contact the
+        support.</span></p>
   </body>
 </html>
