@@ -39,6 +39,12 @@ export default class Data {
   @Column()
   state: string;
 
+  @Column({ name: "confirmation_status", default: false })
+  confirmationStatus: boolean;
+
+  @Column({ name: "confirmation_code", default: false })
+  confirmationCode: boolean;
+
   constructor() {
     if (!this.id) {
       this.id = uuid4();
