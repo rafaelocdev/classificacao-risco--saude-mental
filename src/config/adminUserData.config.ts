@@ -13,7 +13,7 @@ export const adminUserInfo = {
   birthday: faker.date.birthdate(),
   gender: ["M", "F", "O"][Math.floor(Math.random() * 3)],
   mobile: faker.phone.phoneNumber("(##) 9####-####"),
-  street: faker.address.streetName(),
+  street: faker.address.street(),
   number: Math.floor(Math.random() * 1000),
   complement: "-",
   zip: faker.address.zipCodeByState("SP"),
