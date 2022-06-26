@@ -1,11 +1,12 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
+import { v4 as uuid4 } from "uuid";
 
 export class createAllTables1655303724430 implements MigrationInterface {
   name = "createAllTables1655303724430";
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `CREATE TABLE "data" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "cpf" character varying NOT NULL, "birthday" character varying NOT NULL, "gender" character varying NOT NULL, "email" character varying NOT NULL, "mobile" character varying NOT NULL, "street" character varying NOT NULL, "number" character varying NOT NULL, "complement" character varying NOT NULL, "zip" character varying NOT NULL, "city" character varying NOT NULL, "state" character varying NOT NULL, CONSTRAINT "UQ_87465aba2ccd4e4a3c6a5918fbc" UNIQUE ("cpf"), CONSTRAINT "UQ_869f60dec8abe7e46edaf786f6f" UNIQUE ("email"), CONSTRAINT "PK_2533602bd9247937e3a4861e173" PRIMARY KEY ("id"),  "confirmation_status" boolean NOT NULL DEFAULT false, "confirmation_code" boolean NOT NULL DEFAULT false)`,
+      `CREATE TABLE "data" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "cpf" character varying NOT NULL, "birthday" character varying NOT NULL, "gender" character varying NOT NULL, "email" character varying NOT NULL, "mobile" character varying NOT NULL, "street" character varying NOT NULL, "number" character varying NOT NULL, "complement" character varying NOT NULL, "zip" character varying NOT NULL, "city" character varying NOT NULL, "state" character varying NOT NULL, "confirmation_status" boolean NOT NULL DEFAULT false,"confirmation_code" uuid NOT NULL DEFAULT '${uuid4()}' ,CONSTRAINT "UQ_87465aba2ccd4e4a3c6a5918fbc" UNIQUE ("cpf"), CONSTRAINT "UQ_869f60dec8abe7e46edaf786f6f" UNIQUE ("email"), CONSTRAINT "PK_2533602bd9247937e3a4861e173" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE TABLE "employees" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying NOT NULL, "password" character varying NOT NULL, "register" character varying NOT NULL, "job" character varying NOT NULL, "specialty" character varying NOT NULL, "isActive" boolean NOT NULL DEFAULT true, "data_id" uuid NOT NULL, CONSTRAINT "UQ_bd22bc51ebf37bc1d86435342fd" UNIQUE ("register"), CONSTRAINT "REL_9d6a984962f1ed664423451e56" UNIQUE ("data_id"), CONSTRAINT "PK_b9535a98350d5b26e7eb0c26af4" PRIMARY KEY ("id"))`,

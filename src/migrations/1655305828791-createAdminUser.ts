@@ -24,9 +24,9 @@ export class createAdminUser1655305828791 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
             INSERT INTO "data"
-                ("cpf", "birthday", "gender", "email", "mobile", "street", "number", "complement", "zip", "city", "state", "confirmation_status", "confirmation_code")
+                ("cpf", "birthday", "gender", "email", "mobile", "street", "number", "complement", "zip", "city", "state", confirmation_status)
             VALUES
-                ('${cpf}','${birthday}','${gender}','${email}','${mobile}','${street}','${number}','${complement}','${zip}','${city}','${state}', true, true)
+                ('${cpf}','${birthday}','${gender}','${email}','${mobile}','${street}','${number}','${complement}','${zip}','${city}','${state}', true)
         `);
 
     const adminData = await queryRunner.query(`
