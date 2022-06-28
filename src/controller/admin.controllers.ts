@@ -4,21 +4,15 @@ import mailerService from "../services/mailer.service";
 
 class AdminController {
   registerClient = async (req: Request, res: Response) => {
-    const newClient = await adminService.registerClient(req);
+    const { clientReturn, clientConfirmationCode } =
+      await adminService.registerClient(req);
 
-    const clientData = {
-      name: "Graham Jordan",
-      cpf: "808.988.660-72",
-      birthday: "Jan 5, 1911",
-      gender: "Male",
-      email: "cubilia.curae.donec@hotmail.com",
-      mobile: "44-34022-4365",
-      address: "823-7594 Vestibulum. Av.",
-    };
+    const message = await mailerService.welcomeEmail({
+      ...clientReturn,
+      code: clientConfirmationCode,
+    });
 
-    const message = await mailerService.welcomeEmail(clientData);
-
-    return res.status(201).json(newClient);
+    return res.status(201).json(clientReturn);
   };
 
   getClients = async (_: Request, res: Response) => {
@@ -41,9 +35,15 @@ class AdminController {
   };
 
   registerEmployee = async (req: Request, res: Response) => {
-    const newEmployee = await adminService.registerEmployee(req);
+    const { employeeReturn, employeeConfirmationCode } =
+      await adminService.registerEmployee(req);
 
-    return res.status(201).json(newEmployee);
+    const message = await mailerService.welcomeEmail({
+      ...employeeReturn,
+      code: employeeConfirmationCode,
+    });
+
+    return res.status(201).json(employeeReturn);
   };
 
   updateEmployee = async (req: Request, res: Response) => {

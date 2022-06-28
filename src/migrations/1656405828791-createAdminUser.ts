@@ -1,5 +1,6 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 import { adminUserInfo } from "../config/adminUserData.config";
+import { v4 as uuid } from "uuid";
 
 const {
   name,
@@ -20,13 +21,13 @@ const {
   state,
 } = adminUserInfo;
 
-export class createAdminUser1655305828791 implements MigrationInterface {
+export class createAdminUser1656405828791 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
             INSERT INTO "data"
-                ("cpf", "birthday", "gender", "email", "mobile", "street", "number", "complement", "zip", "city", "state", confirmation_status)
+                ("cpf", "birthday", "gender", "email", "mobile", "street", "number", "complement", "zip", "city", "state", confirmation_status, confirmation_code)
             VALUES
-                ('${cpf}','${birthday}','${gender}','${email}','${mobile}','${street}','${number}','${complement}','${zip}','${city}','${state}', true)
+                ('${cpf}','${birthday}','${gender}','${email}','${mobile}','${street}','${number}','${complement}','${zip}','${city}','${state}', true, '${uuid()}')
         `);
 
     const adminData = await queryRunner.query(`

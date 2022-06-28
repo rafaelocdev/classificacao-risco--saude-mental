@@ -2,7 +2,7 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Confirmação de Cadastro</title>
+    <title>Registration Confirmation</title>
     <style>
       h2 { color: #1e1e1e; } h3 { color: #212121; } p { color: #3f3f3f; } h4 {
       color: #303030; } li { color: #484848; }
@@ -16,9 +16,8 @@
     <p>We received your data and your registration was successful!</p>
     <p>It's a pleasure to have you as a customer!</p>
     <p>Thank you for subscribing. Please confirm your email by clicking on the
-      following link</p>
-    <a href="http:" google.com.br>Click here</a>
-    {{! <a href=http://localhost:8081/confirm/${confirmationCode}>Click here</a> }}
+      following link.</p>
+    <a href="http://localhost:3000/activation/{{code}}">Click here</a>
     <br />
     <br />
     <p>After confirmation of the email, you will be able to perform teleservice
@@ -27,12 +26,26 @@
     <h4>Check your information below:</h4>
     <ul>
       <li>Name: {{name}}</li>
+      {{#if subscription}}
+        <li>Subscription: {{subscription}}</li>
+      {{/if}}
+      {{#if register}}
+        <li>Register: {{register}}</li>
+        <li>Specialty: {{specialty}}</li>
+        <li>Job: {{job}}</li>
+      {{/if}}
+      <br />
       <li>CPF: {{cpf}}</li>
       <li>Birth date: {{birthday}}</li>
       <li>Genre: {{gender}}</li>
       <li>Email: {{email}}</li>
       <li>Phone: {{mobile}}</li>
-      <li>Address: {{address}}</li>
+      <li>Street: {{street}}</li>
+      <li>Number: {{number}}</li>
+      <li>Complement: {{complement}}</li>
+      <li>Zip: {{zip}}</li>
+      <li>City: {{city}}</li>
+      <li>State: {{state}}</li>
     </ul>
     <br />
     <p><span>Any discrepancies in the above information, please contact the

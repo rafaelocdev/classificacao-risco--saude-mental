@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class populateResultMhRiskTable1655305753329
+export class populateResultMhRiskTable1656405753329
   implements MigrationInterface
 {
   public async up(queryRunner: QueryRunner): Promise<void> {

@@ -1,6 +1,7 @@
 import { Request } from "express";
 import { AssertsShape } from "yup/lib/object";
 import bcrypt from "bcrypt";
+import { v4 as uuid } from "uuid";
 
 import {
   employeeRepo,
@@ -74,6 +75,7 @@ class AdminService {
     newClientData.zip = (validated as Client).data.zip;
     newClientData.city = (validated as Client).data.city;
     newClientData.state = (validated as Client).data.state;
+    newClientData.confirmationCode = await uuid();
 
     await dataRepo.save(newClientData);
 
@@ -85,7 +87,13 @@ class AdminService {
 
     await clientRepo.save(newClient);
 
-    return await serializedData.validate(newClient, { stripUnknown: true });
+    const clientConfirmationCode = newClientData.confirmationCode;
+
+    const clientReturn = await serializedData.validate(newClient, {
+      stripUnknown: true,
+    });
+
+    return { clientReturn, clientConfirmationCode };
   };
 
   updateClient = async ({ validated, decoded, user }: Request) => {
@@ -178,7 +186,7 @@ class AdminService {
 
     const hashedPassword = await bcrypt.hash(
       (validated as Employee).password,
-      10,
+      10
     );
 
     const newEmployeeData = new Data();
@@ -194,6 +202,7 @@ class AdminService {
     newEmployeeData.zip = (validated as Employee).data.zip;
     newEmployeeData.city = (validated as Employee).data.city;
     newEmployeeData.state = (validated as Employee).data.state;
+    newEmployeeData.confirmationCode = await uuid();
 
     await dataRepo.save(newEmployeeData);
 
@@ -208,11 +217,15 @@ class AdminService {
 
     await employeeRepo.save(newEmployee);
 
+    const employeeConfirmationCode = newEmployeeData.confirmationCode;
+
     await this.registerOnDuty(newEmployee);
 
-    return await serializeEmployeeData.validate(newEmployee, {
+    const employeeReturn = await serializeEmployeeData.validate(newEmployee, {
       stripUnknown: true,
     });
+
+    return { employeeReturn, employeeConfirmationCode };
   };
 
   updateEmployee = async ({

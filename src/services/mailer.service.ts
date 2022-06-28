@@ -3,14 +3,28 @@ import hbs from "nodemailer-express-handlebars";
 import transportMailer from "../config/mailer.config";
 import { ErrorHandler } from "../errors/errors";
 
-interface IWelcomeEmail {
+interface IReceivedUserData {
   name: string;
+  subscription?: string;
+  register?: string;
+  specialty?: string;
+  job?: string;
+  code: string;
+  data: Partial<IData>;
+}
+
+interface IData {
   cpf: string;
   birthday: string;
   gender: string;
   email: string;
   mobile: string;
-  address: string;
+  street: string;
+  number: string;
+  complement: string;
+  zip: string;
+  city: string;
+  state: string;
 }
 
 interface IAppointmentEmail {
@@ -48,7 +62,7 @@ class mailerService {
     return { message: "Email sent successfully." };
   };
 
-  welcomeEmail = (data: IWelcomeEmail) => {
+  welcomeEmail = (user: IReceivedUserData) => {
     transportMailer.use("compile", hbs(this.handlebarOptions));
 
     const mailOptions = {
@@ -57,13 +71,23 @@ class mailerService {
       subject: "Sign Up Confirmation",
       template: "welcomeEmail",
       context: {
-        name: data.name,
-        cpf: data.cpf,
-        birthday: data.birthday,
-        gender: data.gender,
-        email: data.email,
-        mobile: data.mobile,
-        address: data.address,
+        name: user.name,
+        subscription: user.subscription,
+        register: user.register,
+        specialty: user.specialty,
+        job: user.job,
+        cpf: user.data.cpf,
+        birthday: user.data.birthday,
+        gender: user.data.gender,
+        email: user.data.email,
+        mobile: user.data.mobile,
+        street: user.data.street,
+        number: user.data.number,
+        complement: user.data.complement,
+        zip: user.data.zip,
+        city: user.data.city,
+        state: user.data.state,
+        code: user.code,
       },
     };
 

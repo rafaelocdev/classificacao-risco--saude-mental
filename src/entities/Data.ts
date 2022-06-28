@@ -42,7 +42,7 @@ export default class Data {
   @Column({ name: "confirmation_status", default: false })
   confirmationStatus: boolean;
 
-  @Column({ name: "confirmation_code", type: "uuid", default: uuid4() })
+  @Column({ name: "confirmation_code", type: "uuid" })
   confirmationCode?: string;
 
   constructor() {
