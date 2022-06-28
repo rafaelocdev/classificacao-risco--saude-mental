@@ -2,6 +2,9 @@ import path from "path";
 import hbs from "nodemailer-express-handlebars";
 import transportMailer from "../config/mailer.config";
 import { ErrorHandler } from "../errors/errors";
+import { config } from "dotenv";
+
+config();
 
 interface IReceivedUserData {
   name: string;
@@ -87,7 +90,7 @@ class mailerService {
         zip: user.data.zip,
         city: user.data.city,
         state: user.data.state,
-        code: user.code,
+        url: `${process.env.URL_BASE}/activation/${user.code}`,
       },
     };
 
